@@ -6,12 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class RouteController {
-
     String title = "EECS4413 Auction House";
 
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("title", title);
         return "index";
+    }
+
+    @GetMapping("pubsubtest")
+    public String pubSubTest(Model model) {
+        model.addAttribute("title", "Pub Sub Test");
+
+        return "pubSubTest";
     }
 }
