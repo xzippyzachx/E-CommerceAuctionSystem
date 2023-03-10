@@ -21,15 +21,13 @@ public class User {
     private Integer usr_id;
     private String usr_username;
 
-    public User(Integer usr_id,
-                String usr_username) {
+    public User(Integer usr_id, String usr_username) {
 
         this.usr_id = usr_id;
         this.usr_username = usr_username;
     }
 
-    public User() {
-    }
+    public User() {}
 
     public Integer getUsr_id() {
         return usr_id;
