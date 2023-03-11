@@ -12,4 +12,7 @@ public interface BidRepository extends JpaRepository<Bid, Integer> {
     @Query(value="SELECT b FROM Bid b WHERE b.bid_auc_id.auc_id = :auc_id")
     List<Bid> findByAuction(@Param("auc_id") Integer auc_id);
 
+    @Query(value="SELECT b FROM Bid b WHERE b.bid_auc_id.auc_id = :auc_id ORDER BY b.bid_amount DESC LIMIT 1")
+    Bid findBestByAuction(@Param("auc_id") Integer auc_id);
+
 }
