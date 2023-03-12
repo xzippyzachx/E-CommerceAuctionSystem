@@ -2,10 +2,10 @@ package com.group15.auction.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="auctions")
 public class Auction {
 
@@ -25,16 +25,14 @@ public class Auction {
     private String auc_type;
     private Double auc_start_price;
     private Double auc_current_price;
-    private Date auc_end_time;
 
-    public Auction(Integer auc_id, Integer auc_itm_id, Integer auc_pay_id, String auc_type, Double auc_start_price, Double auc_current_price, Date auc_end_time) {
+    public Auction(Integer auc_id, Integer auc_itm_id, Integer auc_pay_id, String auc_type, Double auc_start_price, Double auc_current_price) {
         this.auc_id = auc_id;
         this.auc_itm_id = auc_itm_id;
         this.auc_pay_id = auc_pay_id;
         this.auc_type = auc_type;
         this.auc_start_price = auc_start_price;
         this.auc_current_price = auc_current_price;
-        this.auc_end_time = auc_end_time;
     }
 
     public Auction(){}
@@ -87,25 +85,17 @@ public class Auction {
         this.auc_current_price = auc_current_price;
     }
 
-    public Date getAuc_end_time() {
-        return auc_end_time;
-    }
-
-    public void setAuc_end_time(Date auc_end_time) {
-        this.auc_end_time = auc_end_time;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Auction auction = (Auction) o;
-        return auc_id.equals(auction.auc_id) && Objects.equals(auc_itm_id, auction.auc_itm_id) && Objects.equals(auc_pay_id, auction.auc_pay_id) && Objects.equals(auc_type, auction.auc_type) && Objects.equals(auc_start_price, auction.auc_start_price) && Objects.equals(auc_current_price, auction.auc_current_price) && Objects.equals(auc_end_time, auction.auc_end_time);
+        return auc_id.equals(auction.auc_id) && Objects.equals(auc_itm_id, auction.auc_itm_id) && Objects.equals(auc_pay_id, auction.auc_pay_id) && Objects.equals(auc_type, auction.auc_type) && Objects.equals(auc_start_price, auction.auc_start_price) && Objects.equals(auc_current_price, auction.auc_current_price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(auc_id, auc_itm_id, auc_pay_id, auc_type, auc_start_price, auc_current_price, auc_end_time);
+        return Objects.hash(auc_id, auc_itm_id, auc_pay_id, auc_type, auc_start_price, auc_current_price);
     }
 
     @Override
@@ -117,7 +107,6 @@ public class Auction {
                 ", auc_type='" + auc_type + '\'' +
                 ", auc_start_price=" + auc_start_price +
                 ", auc_current_price=" + auc_current_price +
-                ", auc_end_time=" + auc_end_time +
                 '}';
     }
 }

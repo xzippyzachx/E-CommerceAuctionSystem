@@ -8,8 +8,14 @@ client.debug = null;
 // Start the STOMP communications, provide a callback for when the CONNECT frame arrives.
 client.connect({}, frame => {
 
-    client.subscribe("/topic/update", payload => {
-        let num = document.getElementById('number');
+    client.subscribe("/broadcast/auction-update/1", payload => {
+        let num = document.getElementById('number1');
+        let numText = payload.body;
+        num.innerHTML = numText;
+    });
+
+    client.subscribe("/broadcast/auction-update/2", payload => {
+        let num = document.getElementById('number2');
         let numText = payload.body;
         num.innerHTML = numText;
     });

@@ -1,5 +1,5 @@
 server:
-  port : 8083
+  port: 8083
 
 spring:
   datasource:
@@ -16,3 +16,6 @@ spring:
     show_sql: true
   main:
     web-application-type: servlet
+
+controllerServer:
+  port: 8080
