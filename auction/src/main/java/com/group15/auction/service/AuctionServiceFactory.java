@@ -5,13 +5,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuctionServiceFactory {
 
-    private AuctionServiceFactory (AuctionService regularService, ForwardService forwardService) {
+    private AuctionServiceFactory (AuctionService regularService, ForwardService forwardService, DutchService dutchService) {
         this.regularService = regularService;
         this.forwardService = forwardService;
+        this.dutchService = dutchService;
     }
 
     private final AuctionService regularService;
     private final ForwardService forwardService;
+    private final DutchService dutchService;
 
     public AbstractService getAuctionService(String type) {
 
@@ -22,7 +24,7 @@ public class AuctionServiceFactory {
             case "forward":
                 return forwardService;
             case "dutch":
-                return null;
+                return dutchService;
             default:
                 return null;
         }

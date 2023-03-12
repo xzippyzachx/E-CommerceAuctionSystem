@@ -4,6 +4,8 @@ import com.group15.auction.model.Auction;
 import com.group15.auction.model.Bid;
 import com.group15.auction.repository.AuctionRepository;
 import com.group15.auction.repository.BidRepository;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -11,8 +13,8 @@ import java.util.Date;
 @Service
 public class ForwardService extends AbstractService {
 
-    public ForwardService(AuctionRepository auctionRepo, BidRepository bidRepo) {
-        super(auctionRepo, bidRepo);
+    public ForwardService(AuctionRepository auctionRepo, BidRepository bidRepo, RestTemplateBuilder restTemplateBuilder) {
+        super(auctionRepo, bidRepo, restTemplateBuilder);
     }
 
     @Override
@@ -39,6 +41,17 @@ public class ForwardService extends AbstractService {
 
         auctionRepo.save(auction);
 
+        broadcastCurrentAuction(auction);
+
         return "Bid successful";
+    }
+
+    @Override
+    public void broadcastCurrentAuction(Auction auction) {
+        String url = "http://localhost:" + env.getProperty("controllerServer.port") + "/api/broadcast/auction-update";
+
+        HttpEntity<Auction> request = new HttpEntity<>(auction);
+
+        this.restTemplate.postForEntity(url, request , null);
     }
 }
