@@ -2,6 +2,7 @@ package com.group15.auction.service;
 
 import com.group15.auction.model.Auction;
 import com.group15.auction.model.Bid;
+import com.group15.auction.model.ForwardAuction;
 import com.group15.auction.repository.AuctionRepository;
 import com.group15.auction.repository.BidRepository;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -22,8 +23,8 @@ public class ForwardService extends AbstractService {
 
         Date now = new Date();
 
-        if(auction.getAuc_end_time().compareTo(now) < 0)
-            return "Auction has already ended at " + auction.getAuc_end_time();
+        if(((ForwardAuction) auction).getFwd_end_time().compareTo(now) < 0)
+            return "Auction has already ended at " + ((ForwardAuction) auction).getFwd_end_time();
 
         if(auction.getAuc_current_price() >= bid_amount)
             return "Bid amount must be larger than " + auction.getAuc_current_price();

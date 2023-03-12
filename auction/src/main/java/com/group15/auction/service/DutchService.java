@@ -5,7 +5,9 @@ import com.group15.auction.repository.AuctionRepository;
 import com.group15.auction.repository.BidRepository;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DutchService extends AbstractService {
 
     protected DutchService(AuctionRepository auctionRepo, BidRepository bidRepo, RestTemplateBuilder restTemplateBuilder) {
@@ -14,6 +16,7 @@ public class DutchService extends AbstractService {
 
     @Override
     public String createNewBid(Auction auc_id, Double bid_amount) {
+        //ToDO: Implement Dutch logic
         return null;
     }
 
