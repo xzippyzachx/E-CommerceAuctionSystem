@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5435/payments
-    username: Zachary
+    username: postgres
     password: eecs4413
   jpa:
     hibernate:

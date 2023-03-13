@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/users
-    username: Zachary
+    username: postgres
     password: eecs4413
   jpa:
     hibernate:
