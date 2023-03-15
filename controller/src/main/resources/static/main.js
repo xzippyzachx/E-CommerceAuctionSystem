@@ -22,4 +22,11 @@ client.connect({}, frame => {
         num.innerHTML = numText;
     });
 
+    client.subscribe("/broadcast/auction-update/3", payload => {
+        let num = document.getElementById('number3');
+        let data = JSON.parse(payload.body);
+        let numText = data.auc_current_price + " " + data.auc_state;
+        num.innerHTML = numText;
+    });
+
 });

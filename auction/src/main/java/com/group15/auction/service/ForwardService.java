@@ -25,10 +25,9 @@ public class ForwardService extends AbstractService {
 
     @Override
     public String createNewBid(Auction auction, Double bid_amount) {
-
         Date now = new Date();
 
-        if(!((ForwardAuction) auction).getAuc_state().equals("running"))
+        if(!auction.getAuc_state().equals("running"))
             return "Auction has already ended at " + ((ForwardAuction) auction).getFwd_end_time();
 
         if(auction.getAuc_current_price() >= bid_amount)
@@ -67,7 +66,7 @@ public class ForwardService extends AbstractService {
         List<Auction> auctions = auctionRepo.findByAuctionType("forward");
 
         System.out.println("Now: " + now.toInstant().toString());
-        for (Auction auction: auctions) {
+        for(Auction auction: auctions) {
 
             if(((ForwardAuction) auction).getFwd_end_time().compareTo(now) > 0)
             {
@@ -84,12 +83,11 @@ public class ForwardService extends AbstractService {
             } else if (((ForwardAuction) auction).getAuc_state().equals("running")) {
                 CompleteAuction(auction.getAuc_id());
             }
-
         }
     }
 
     private void CompleteAuction(Integer auc_id) {
-        System.out.println("Ending auction AuctionId: " + auc_id + " [" + new Date().toInstant().toString() + "]");
+        System.out.println("Ending forward auction AuctionId: " + auc_id + " [" + new Date().toInstant().toString() + "]");
 
         Auction auction = auctionRepo.findById(auc_id).get();
 
