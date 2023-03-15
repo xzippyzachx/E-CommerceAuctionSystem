@@ -16,8 +16,8 @@ public class DutchAuction extends Auction {
     private double dch_min_price;
     private Integer dch_end_delay;
 
-    public DutchAuction(Integer auc_id, Integer auc_itm_id, Integer auc_pay_id, String auc_type, Double auc_start_price, Double auc_current_price, double dch_decrease_amount, Integer dch_decrease_interval, double dch_min_price, Integer dch_end_delay) {
-        super(auc_id, auc_itm_id, auc_pay_id, auc_type, auc_start_price, auc_current_price);
+    public DutchAuction(Integer auc_id, Integer auc_itm_id, Integer auc_pay_id, String auc_type, Double auc_start_price, Double auc_current_price, double dch_decrease_amount, Integer dch_decrease_interval, double dch_min_price, Integer dch_end_delay, String auc_state) {
+        super(auc_id, auc_itm_id, auc_pay_id, auc_type, auc_start_price, auc_current_price, auc_state);
         this.dch_decrease_amount = dch_decrease_amount;
         this.dch_decrease_interval = dch_decrease_interval;
         this.dch_min_price = dch_min_price;

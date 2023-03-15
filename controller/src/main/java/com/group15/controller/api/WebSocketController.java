@@ -27,11 +27,12 @@ public class WebSocketController {
 
     static record SendAuctionUpdateRequest(
             Integer auc_id,
-            Double auc_current_price
+            Double auc_current_price,
+            String auc_state
     ) {}
     @PostMapping("auction-update")
     public void broadcastAuctionUpdate(@RequestBody SendAuctionUpdateRequest request) {
         System.out.println("Current Price: " + request.auc_current_price);
-        template.convertAndSend("/broadcast/auction-update/" + request.auc_id, request.auc_current_price);
+        template.convertAndSend("/broadcast/auction-update/" + request.auc_id, request);
     }
 }

@@ -10,13 +10,15 @@ client.connect({}, frame => {
 
     client.subscribe("/broadcast/auction-update/1", payload => {
         let num = document.getElementById('number1');
-        let numText = payload.body;
+        let data = JSON.parse(payload.body);
+        let numText = data.auc_current_price + " " + data.auc_state;
         num.innerHTML = numText;
     });
 
     client.subscribe("/broadcast/auction-update/2", payload => {
         let num = document.getElementById('number2');
-        let numText = payload.body;
+        let data = JSON.parse(payload.body);
+        let numText = data.auc_current_price + " " + data.auc_state;
         num.innerHTML = numText;
     });
 
