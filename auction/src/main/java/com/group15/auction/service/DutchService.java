@@ -10,19 +10,23 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 public class DutchService extends AbstractService {
 
     protected DutchService(AuctionRepository auctionRepo, BidRepository bidRepo, RestTemplateBuilder restTemplateBuilder) {
         super(auctionRepo, bidRepo, restTemplateBuilder);
+        SetupAuctionIntervals();
     }
 
     @Override
     public String createNewBid(Auction auction, Double bid_amount) {
         Date now = new Date();
 
-        if(!((DutchAuction) auction).getAuc_state().equals("running"))
+        if(!auction.getAuc_state().equals("running"))
             return "Auction has already been claimed";
 
         if(auction.getAuc_current_price().doubleValue() != bid_amount)
@@ -53,5 +57,85 @@ public class DutchService extends AbstractService {
         HttpEntity<Auction> request = new HttpEntity<>(auction);
 
         this.restTemplate.postForEntity(url, request , null);
+    }
+
+    private void SetupAuctionIntervals() {
+        Date now = new Date();
+
+        List<Auction> auctions = auctionRepo.findByAuctionType("dutch");
+
+        System.out.println("Now: " + now.toInstant().toString());
+        for(Auction auction: auctions) {
+
+            if(auction.getAuc_state().equals("running"))
+            {
+                Timer timer = new Timer();
+                TimerTask tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        NextAuctionInterval(auction.getAuc_id());
+                    };
+                };
+                Date nextInterval = new Date(now.getTime() + (1000L * ((DutchAuction) auction).getDch_decrease_interval()));
+                timer.schedule(tt, nextInterval);
+                System.out.println("Scheduling AuctionId: " + auction.getAuc_id() + " for first interval: " + nextInterval.toInstant().toString());
+            }
+        }
+    }
+
+    private void NextAuctionInterval(Integer auc_id) {
+        Date now = new Date();
+        System.out.println("Interval for dutch auction AuctionId: " + auc_id + " [" + now.toInstant().toString() + "]");
+
+        Auction auction = auctionRepo.findById(auc_id).get();
+
+        if(!auction.getAuc_state().equals("running")) {
+            return;
+        }
+
+        if(auction.getAuc_current_price() > ((DutchAuction) auction).getDch_min_price()) {
+            double nextPrice = auction.getAuc_current_price() - ((DutchAuction) auction).getDch_decrease_amount();
+            auction.setAuc_current_price(nextPrice);
+
+            Timer timer = new Timer();
+            TimerTask tt = new TimerTask() {
+                @Override
+                public void run() {
+                    NextAuctionInterval(auction.getAuc_id());
+                };
+            };
+            Date nextInterval = new Date(now.getTime() + (1000L * ((DutchAuction) auction).getDch_decrease_interval()));
+            timer.schedule(tt, nextInterval);
+        }
+
+        if(auction.getAuc_current_price() <= ((DutchAuction) auction).getDch_min_price()) {
+            auction.setAuc_current_price(((DutchAuction) auction).getDch_min_price());
+
+            Timer timer = new Timer();
+            TimerTask tt = new TimerTask() {
+                @Override
+                public void run() {
+                    CompleteAuction(auction.getAuc_id());
+                };
+            };
+            Date nextInterval = new Date(now.getTime() + (1000L * ((DutchAuction) auction).getDch_end_delay()));
+            timer.schedule(tt, nextInterval);
+        }
+
+        auctionRepo.save(auction);
+
+        broadcastCurrentAuction(auction);
+    }
+
+    private void CompleteAuction(Integer auc_id) {
+        System.out.println("Ending dutch auction AuctionId: " + auc_id + " [" + new Date().toInstant().toString() + "]");
+
+        Auction auction = auctionRepo.findById(auc_id).get();
+
+        auction.setAuc_state("complete");
+
+        auctionRepo.save(auction);
+
+        broadcastCurrentAuction(auction);
     }
 }
