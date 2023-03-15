@@ -10,12 +10,17 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 public class ForwardService extends AbstractService {
 
     public ForwardService(AuctionRepository auctionRepo, BidRepository bidRepo, RestTemplateBuilder restTemplateBuilder) {
         super(auctionRepo, bidRepo, restTemplateBuilder);
+
+        SetupAuctionEndings();
     }
 
     @Override
@@ -23,7 +28,7 @@ public class ForwardService extends AbstractService {
 
         Date now = new Date();
 
-        if(((ForwardAuction) auction).getFwd_end_time().compareTo(now) < 0)
+        if(!((ForwardAuction) auction).getAuc_state().equals("running"))
             return "Auction has already ended at " + ((ForwardAuction) auction).getFwd_end_time();
 
         if(auction.getAuc_current_price() >= bid_amount)
@@ -55,4 +60,44 @@ public class ForwardService extends AbstractService {
 
         this.restTemplate.postForEntity(url, request , null);
     }
+
+    private void SetupAuctionEndings() {
+        Date now = new Date();
+
+        List<Auction> auctions = auctionRepo.findByAuctionType("forward");
+
+        System.out.println("Now: " + now.toInstant().toString());
+        for (Auction auction: auctions) {
+
+            if(((ForwardAuction) auction).getFwd_end_time().compareTo(now) > 0)
+            {
+                Timer timer = new Timer();
+                TimerTask tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        CompleteAuction(auction.getAuc_id());
+                    };
+                };
+                timer.schedule(tt,((ForwardAuction)auction).getFwd_end_time());
+                System.out.println("Scheduling AuctionId: " + auction.getAuc_id() + " for Date: " + ((ForwardAuction)auction).getFwd_end_time().toInstant().toString());
+
+            } else if (((ForwardAuction) auction).getAuc_state().equals("running")) {
+                CompleteAuction(auction.getAuc_id());
+            }
+
+        }
+    }
+
+    private void CompleteAuction(Integer auc_id) {
+        System.out.println("Ending auction AuctionId: " + auc_id + " [" + new Date().toInstant().toString() + "]");
+
+        Auction auction = auctionRepo.findById(auc_id).get();
+
+        auction.setAuc_state("complete");
+
+        auctionRepo.save(auction);
+
+        broadcastCurrentAuction(auction);
+    }
+
 }

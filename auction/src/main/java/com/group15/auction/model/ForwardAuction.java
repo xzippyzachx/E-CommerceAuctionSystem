@@ -12,8 +12,8 @@ public class ForwardAuction extends Auction {
 
     private Date fwd_end_time;
 
-    public ForwardAuction(Integer auc_id, Integer auc_itm_id, Integer auc_pay_id, String auc_type, Double auc_start_price, Double auc_current_price, Date auc_end_time) {
-        super(auc_id, auc_itm_id, auc_pay_id, auc_type, auc_start_price, auc_current_price);
+    public ForwardAuction(Integer auc_id, Integer auc_itm_id, Integer auc_pay_id, String auc_type, Double auc_start_price, Double auc_current_price, Date auc_end_time, String auc_state) {
+        super(auc_id, auc_itm_id, auc_pay_id, auc_type, auc_start_price, auc_current_price, auc_state);
         this.fwd_end_time = auc_end_time;
     }
 
