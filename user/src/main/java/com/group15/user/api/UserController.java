@@ -1,5 +1,6 @@
 package com.group15.user.api;
 
+import com.group15.user.model.Address;
 import com.group15.user.model.User;
 import com.group15.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,27 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    static record NewUserRequest(
-            String usr_username
+    static record SignUpRequest(
+            String usr_username,
+            String usr_password,
+            String usr_first_name,
+            String usr_last_name,
+            String adr_street_name,
+            Integer adr_street_number,
+            String adr_city,
+            String adr_province,
+            String adr_country,
+            String adr_postal_code
     ) {}
-    @PostMapping("add-user")
-    public void addUser(@RequestBody NewUserRequest request) {
-        userService.addUser(request.usr_username());
+    @PostMapping("sign-up")
+    public String signUp(@RequestBody SignUpRequest request) {
+        Address address = userService.addAddress(request.adr_street_name, request.adr_street_number, request.adr_city, request.adr_province, request.adr_country, request.adr_postal_code);
+
+        userService.addUser(request.usr_username, request.usr_password, request.usr_first_name, request.usr_last_name, address);
+
+        return "Signed up";
     }
+
+    //Todo: Need to add other endpoints required
 
 }
