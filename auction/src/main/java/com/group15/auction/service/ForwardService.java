@@ -6,19 +6,19 @@ import com.group15.auction.model.ForwardAuction;
 import com.group15.auction.repository.AuctionRepository;
 import com.group15.auction.repository.BidRepository;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Service
 public class ForwardService extends AbstractService {
 
-    public ForwardService(AuctionRepository auctionRepo, BidRepository bidRepo, RestTemplateBuilder restTemplateBuilder) {
-        super(auctionRepo, bidRepo, restTemplateBuilder);
+    private List<Timer> timers = new ArrayList<>();
+
+    public ForwardService(AuctionRepository auctionRepo, BidRepository bidRepo, RestTemplateBuilder restTemplateBuilder, Environment env) {
+        super(env, auctionRepo, bidRepo, restTemplateBuilder);
 
         SetupAuctionEndings();
     }
@@ -60,8 +60,18 @@ public class ForwardService extends AbstractService {
         this.restTemplate.postForEntity(url, request , null);
     }
 
+    @Override
+    public void dataReset() {
+        SetupAuctionEndings();
+    }
+
     private void SetupAuctionEndings() {
         Date now = new Date();
+
+        for (Timer timer: timers) {
+            timer.cancel();
+        }
+        timers.clear();
 
         List<Auction> auctions = auctionRepo.findByAuctionType("forward");
 
@@ -78,9 +88,11 @@ public class ForwardService extends AbstractService {
                     };
                 };
                 timer.schedule(tt,((ForwardAuction)auction).getFwd_end_time());
+                timers.add(timer);
                 System.out.println("Scheduling AuctionId: " + auction.getAuc_id() + " for Date: " + ((ForwardAuction)auction).getFwd_end_time().toInstant().toString());
 
             } else if (((ForwardAuction) auction).getAuc_state().equals("running")) {
+                System.out.println("AuctionId: " + auction.getAuc_id() + " End Time: " + ((ForwardAuction) auction).getFwd_end_time().toInstant().toString());
                 CompleteAuction(auction.getAuc_id());
             }
         }
