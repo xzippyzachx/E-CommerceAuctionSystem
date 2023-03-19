@@ -27,7 +27,7 @@ public class ItemController {
     static record GetItemRequest(
             Integer itm_id
     ) {}
-    @GetMapping("get-item")
+    @RequestMapping(value="get-item", method={RequestMethod.GET, RequestMethod.POST})
     public Item getItem(@RequestBody GetItemRequest request) {
         return itemService.getItemById(request.itm_id);
     }
@@ -36,7 +36,7 @@ public class ItemController {
     static record GetKeywordRequest(
             String keyword
     ) {}
-    @GetMapping("get-items-by-key")
+    @RequestMapping(value="get-items-by-key", method={RequestMethod.GET, RequestMethod.POST})
     public List<Item> getItems(@RequestBody GetKeywordRequest request){
         return itemService.getItemsByKeyword(request.keyword);
     }
@@ -45,7 +45,7 @@ public class ItemController {
             Integer [] itm_ids
     ) {}
 
-    @GetMapping("get-items-by-ids")
+    @RequestMapping(value="get-items-by-ids", method={RequestMethod.GET, RequestMethod.POST})
     public List<Item> getItemsbyId(@RequestBody GetIdRequest request){
         return itemService.getItemsByIds(request.itm_ids);
     }

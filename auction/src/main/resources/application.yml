@@ -21,3 +21,6 @@ spring:
 
 controllerServer:
   port: 8080
+
+itemServer:
+  port: 8082

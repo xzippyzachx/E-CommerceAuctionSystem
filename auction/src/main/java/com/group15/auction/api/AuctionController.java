@@ -3,6 +3,11 @@ package com.group15.auction.api;
 import com.group15.auction.model.Auction;
 import com.group15.auction.model.Bid;
 import com.group15.auction.service.AuctionServiceFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +22,17 @@ public class AuctionController {
         this.auctionServiceFactory = auctionServiceFactory;
     }
 
-    @GetMapping("get-all-auctions")
-    public List<Auction> getAuctions() {
-        return auctionServiceFactory.getAuctionService().getAllAuctions();
+    @GetMapping(value="get-all-auctions", produces=MediaType.APPLICATION_JSON_VALUE)
+    public String getAuctions() {
+        return auctionServiceFactory.getAuctionService().getAllAuctions().toString();
     }
 
     static record GetAuctionRequest(
             Integer auc_id
     ) {}
-    @RequestMapping(value = "get-auction", method = { RequestMethod.GET, RequestMethod.POST })
-    public Auction getAuction(@RequestBody GetAuctionRequest request) {
-        return auctionServiceFactory.getAuctionService().getAuction(request.auc_id);
+    @RequestMapping(value="get-auction", method={RequestMethod.GET, RequestMethod.POST})
+    public String getAuction(@RequestBody GetAuctionRequest request) {
+        return auctionServiceFactory.getAuctionService().getAuctionJSON(request.auc_id).toString();
     }
 
     @GetMapping("get-all-bids")

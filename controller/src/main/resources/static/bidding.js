@@ -31,7 +31,7 @@ client.connect({}, frame => {
 
 });
 
-BidButton = (() => {
+const BidButton = (() => {
 
     let Http = new XMLHttpRequest();
     let url='http://localhost:8080/api/new-bid';

@@ -3,3 +3,8 @@
 .hide {
     display: none;
 }
+
+.auctions-list-container {
+    display: flex;
+    flex-flow: row nowrap;
+}
