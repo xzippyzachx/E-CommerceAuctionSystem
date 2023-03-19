@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.group15.item.model.Item;
 import com.group15.item.repository.ItemRepository;
+
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -27,7 +29,11 @@ public class ItemService {
     }
 
     public List<Item> getItemsByKeyword(String keyword) {
-        return itemRepository.findByItmNameContainingOrItmDescriptionContaining(keyword, keyword);
+        keyword = keyword.toLowerCase();
+        return itemRepository.findByItmNameContainingOrItmDescriptionContaining(keyword);
     }
 
+    public List<Item> getItemsByIds(Integer[] itmIds) {
+        return itemRepository.findAllById(Arrays.stream(itmIds).toList());
+    }
 }
