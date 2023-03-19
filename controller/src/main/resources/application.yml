@@ -1,2 +1,5 @@
 server:
   port : 8080
+
+auctionServer:
+  port: 8083

@@ -27,5 +27,5 @@ BEGIN
 	INSERT INTO auctions (auc_id, auc_current_price, auc_itm_id, auc_start_price, auc_type, auc_state)
 	VALUES (nextval('auc_id_sequence'), 1000, null, 1000, 'dutch', 'running');
 	INSERT INTO dutch_auctions (dch_id, dch_decrease_amount, dch_decrease_interval, dch_min_price, dch_end_delay)
-	VALUES (currval('auc_id_sequence'), 100, 60, 100, 120);
+	VALUES (currval('auc_id_sequence'), 100, 10, 100, 30);
 END; $$;

@@ -2,8 +2,7 @@ package com.group15.controller.api;
 
 import com.group15.controller.service.ControllerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("api")
 @RestController
@@ -14,6 +13,16 @@ public class ProxyController {
     @Autowired
     public ProxyController(ControllerService controllerService) {
         this.controllerService = controllerService;
+    }
+
+    static record NewBidRequest(
+            Integer auc_id,
+            Double bid_amount
+    ) {}
+    @PostMapping("new-bid")
+    public String newBid(@RequestBody NewBidRequest request) {
+
+        return controllerService.newBid(request.auc_id, request.bid_amount);
     }
 
 }

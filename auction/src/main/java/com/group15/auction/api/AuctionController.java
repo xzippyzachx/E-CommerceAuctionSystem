@@ -25,7 +25,7 @@ public class AuctionController {
     static record GetAuctionRequest(
             Integer auc_id
     ) {}
-    @GetMapping("get-auction")
+    @RequestMapping(value = "get-auction", method = { RequestMethod.GET, RequestMethod.POST })
     public Auction getAuction(@RequestBody GetAuctionRequest request) {
         return auctionServiceFactory.getAuctionService().getAuction(request.auc_id);
     }
