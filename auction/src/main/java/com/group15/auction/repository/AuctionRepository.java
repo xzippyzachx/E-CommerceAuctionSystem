@@ -14,6 +14,12 @@ public interface AuctionRepository extends JpaRepository<Auction, Integer> {
     @Query(value="SELECT a FROM Auction a WHERE a.auc_type = :auc_type")
     List<Auction> findByAuctionType(@Param("auc_type") String auc_type);
 
+    @Query(value="SELECT a FROM Auction a ORDER BY a.auc_id")
+    List<Auction> findAll();
+
+    @Query(value="SELECT a FROM Auction a WHERE a.auc_itm_id IN :itm_ids ORDER BY a.auc_id")
+    List<Auction> findByItemId(@Param("itm_ids") Integer[] itm_ids);
+
     @Modifying
     @Transactional
     @Query(value="CALL auction_data_reset()", nativeQuery = true)

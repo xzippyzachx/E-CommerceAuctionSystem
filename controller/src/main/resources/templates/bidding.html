@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8" />
+        <title>Bidding Page</title>
+    </head>
+    <body>
+        <h1>Bidding Page</h1>
+
+        <div th:if="${auc_id == null}">
+            <p>Auction does not exist!</p>
+        </div>
+
+        <div th:if="${auc_id}">
+            <div>
+                <h3>|Item Description|</h3>
+                <p th:text="${'Item Name: ' + itm_name}"></p>
+                <p th:text="${'Item Description: ' + itm_description}"></p>
+            </div>
+
+            <div>
+                <h3>|Bid|</h3>
+                <p id="current-price" th:text="${'Current Price: $' + #numbers.formatDecimal(auc_current_price,2,2,'POINT')}"></p>
+
+                <form id="bid-form" th:classappend="${auc_state != 'running' ? 'hide' : ''}">
+                    <label for="bid-amount">Amount</label>
+                    <input id="bid-amount" type="number" th:classappend="${auc_type != 'forward' ? 'hide' : ''}" th:value="${auc_current_price + 10}"></input>
+                    <button id="bid-button" type="button" onclick="BidButton()" th:text="${auc_type == 'forward' ? 'Bid' : 'Buy'}"></button>
+                </form>
+
+                <p id="bid-message" th:text="${auc_state != 'running' ? 'Auction is complete!' : ''}"></p>
+            </div>
+
+        </div>
+    </body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.js" integrity="sha512-lyIq9fRcCeSCXhp41XC/250UBmypAHV8KW+AhLcSEIksWHBfhzub6XXwDe67wTpOG8zrO2NAU/TYmEaCW+aQSg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous"></script>
+
+    <script th:inline="javascript">
+        let auc_id = [[${auc_id}]];
+    </script>
+    <script th:src="@{/bidding.js}" th:inline="javascript"></script>
+
+</html>

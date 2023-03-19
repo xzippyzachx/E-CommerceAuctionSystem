@@ -47,7 +47,7 @@ public class DutchService extends AbstractService {
 
         broadcastCurrentAuction(auction);
 
-        return "Bid successful";
+        return "Buy successful";
     }
 
     @Override

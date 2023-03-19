@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8">
+        <title>Auctions Page</title>
+    </head>
+    <body>
+        <h1>Auctions Page</h1>
+
+        <form>
+            <input id="search-input" type="text"></input>
+            <button type="button" onclick="SearchAuctions()">Search</button>
+        </form>
+
+        <table>
+            <tbody id="auctions-table">
+                <tr>
+                    <th>Item Name</th>
+                    <th>Current Price</th>
+                    <th>Type</th>
+                    <th>Time Left</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                <tr th:if="${auctions.isEmpty()}">
+                    <td colspan="2">No auctions available</td>
+                </tr>
+                <tr th:each="auc : ${auctions}" th:id="${'auc-id-' + auc.auc_id}">
+                    <td>
+                        <span th:text="${auc.itm_name}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${'$' + auc.auc_current_price}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${auc.auc_type}"></span>
+                    </td>
+                    <td>
+                        <span class="auction-countdown" th:text="${auc.fwd_end_time}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${auc.auc_state}"></span>
+                    </td>
+                    <td>
+                        <button class="auction-btn">Bid</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.js" integrity="sha512-lyIq9fRcCeSCXhp41XC/250UBmypAHV8KW+AhLcSEIksWHBfhzub6XXwDe67wTpOG8zrO2NAU/TYmEaCW+aQSg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous"></script>
+
+    <script th:src="@{/countDown.js}"></script>
+    <script th:src="@{/auctions.js}"></script>
+
+</html>

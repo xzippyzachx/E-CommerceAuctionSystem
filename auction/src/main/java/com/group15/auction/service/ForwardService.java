@@ -57,7 +57,7 @@ public class ForwardService extends AbstractService {
 
         HttpEntity<Auction> request = new HttpEntity<>(auction);
 
-        this.restTemplate.postForEntity(url, request , null);
+        this.restTemplate.postForEntity(url, request , null); //ToDO: Try catch
     }
 
     @Override
