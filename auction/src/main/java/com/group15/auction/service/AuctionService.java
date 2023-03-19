@@ -56,6 +56,27 @@ public class AuctionService {
         return returnedAuctions;
     }
 
+    public JSONArray getAuctionsByKey(String keyword) {
+        List<ItemBean> itemBeans = getItemsByKey(keyword);
+
+        Integer[] itm_ids = new Integer[itemBeans.size()];
+        for (int i = 0; i < itemBeans.size(); i++) {
+            itm_ids[i] = itemBeans.get(i).getItm_id();
+        }
+
+        List<Auction> auctions = auctionRepo.findByItemId(itm_ids);
+        JSONArray returnedAuctions = new JSONArray();
+
+        for (int i = 0; i < auctions.size(); i++) {
+            JSONObject auction = new JSONObject(auctions.get(i));
+            auction.put("auc_itm_id", new JSONObject(itemBeans.get(i)));
+
+            returnedAuctions.put(auction);
+        }
+
+        return returnedAuctions;
+    }
+
     public JSONObject getAuctionJSON(Integer auc_id) {
 
         if(auctionRepo.findById(auc_id).isPresent()) {
@@ -117,6 +138,20 @@ public class AuctionService {
 
         PostItems itemsPayload = new PostItems(itm_ids);
         HttpEntity<PostItems> request = new HttpEntity<>(itemsPayload);
+
+        ResponseEntity<ItemBean[]> response = this.restTemplate.postForEntity(url, request, ItemBean[].class); //ToDO: Try catch
+
+        return Arrays.stream(response.getBody()).toList();
+    }
+
+    public static record PostItemsKey(
+            String keyword
+    ) {}
+    private List<ItemBean> getItemsByKey(String keyword) {
+        String url = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/get-items-by-key";
+
+        PostItemsKey itemsPayload = new PostItemsKey(keyword);
+        HttpEntity<PostItemsKey> request = new HttpEntity<>(itemsPayload);
 
         ResponseEntity<ItemBean[]> response = this.restTemplate.postForEntity(url, request, ItemBean[].class); //ToDO: Try catch
 

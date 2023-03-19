@@ -43,6 +43,20 @@ public class ControllerService {
         return new JSONArray(response.getBody());
     }
 
+    public static record PostAuctionByKey(
+            String keyword
+    ) {}
+    public JSONArray getAuctionsByKey(String keyword) {
+        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auctions-by-key";
+
+        PostAuctionByKey auctionPayload = new PostAuctionByKey(keyword);
+        HttpEntity<PostAuctionByKey> request = new HttpEntity<>(auctionPayload);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return new JSONArray(response.getBody());
+    }
+
     public static record PostBid(
             Integer auc_id,
             Double bid_amount

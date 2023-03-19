@@ -61,6 +61,7 @@ public class RouteController {
             model.addAttribute("auc_id", auction.getInt("auc_id"));
             model.addAttribute("auc_current_price", auction.getDouble("auc_current_price"));
             model.addAttribute("auc_state", auction.getString("auc_state"));
+            model.addAttribute("auc_type", auction.getString("auc_type"));
             model.addAttribute("itm_name", auction.getJSONObject("auc_itm_id").getString("itm_name"));
             model.addAttribute("itm_description", auction.getJSONObject("auc_itm_id").getString("itm_description"));
         }

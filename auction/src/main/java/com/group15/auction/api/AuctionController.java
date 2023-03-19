@@ -27,6 +27,14 @@ public class AuctionController {
         return auctionServiceFactory.getAuctionService().getAllAuctions().toString();
     }
 
+    static record GetAuctionsByKeyRequest(
+            String keyword
+    ) {}
+        @RequestMapping(value="get-auctions-by-key", produces=MediaType.APPLICATION_JSON_VALUE, method={RequestMethod.GET, RequestMethod.POST})
+    public String getAuctionsByKey(@RequestBody GetAuctionsByKeyRequest request) {
+        return auctionServiceFactory.getAuctionService().getAuctionsByKey(request.keyword).toString();
+    }
+
     static record GetAuctionRequest(
             Integer auc_id
     ) {}
