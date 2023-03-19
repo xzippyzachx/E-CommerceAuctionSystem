@@ -4,6 +4,7 @@ import com.group15.auction.model.Auction;
 import com.group15.auction.model.Bid;
 import com.group15.auction.repository.AuctionRepository;
 import com.group15.auction.repository.BidRepository;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +42,10 @@ public class AuctionService {
 
     public Bid getAuctionBestBid(Integer auc_id) {
         return bidRepo.findBestByAuction(auc_id);
+    }
+
+    public void resetAuctionData() {
+        auctionRepo.resetAuctionData();
     }
 
 }

@@ -6,19 +6,19 @@ import com.group15.auction.model.DutchAuction;
 import com.group15.auction.repository.AuctionRepository;
 import com.group15.auction.repository.BidRepository;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Service
 public class DutchService extends AbstractService {
 
-    protected DutchService(AuctionRepository auctionRepo, BidRepository bidRepo, RestTemplateBuilder restTemplateBuilder) {
-        super(auctionRepo, bidRepo, restTemplateBuilder);
+    private List<Timer> timers = new ArrayList<>();
+
+    protected DutchService(AuctionRepository auctionRepo, BidRepository bidRepo, RestTemplateBuilder restTemplateBuilder, Environment env) {
+        super(env, auctionRepo, bidRepo, restTemplateBuilder);
         SetupAuctionIntervals();
     }
 
@@ -59,8 +59,18 @@ public class DutchService extends AbstractService {
         this.restTemplate.postForEntity(url, request , null);
     }
 
+    @Override
+    public void dataReset() {
+        SetupAuctionIntervals();
+    }
+
     private void SetupAuctionIntervals() {
         Date now = new Date();
+
+        for (Timer timer: timers) {
+            timer.cancel();
+        }
+        timers.clear();
 
         List<Auction> auctions = auctionRepo.findByAuctionType("dutch");
 
@@ -78,6 +88,7 @@ public class DutchService extends AbstractService {
                 };
                 Date nextInterval = new Date(now.getTime() + (1000L * ((DutchAuction) auction).getDch_decrease_interval()));
                 timer.schedule(tt, nextInterval);
+                timers.add(timer);
                 System.out.println("Scheduling AuctionId: " + auction.getAuc_id() + " for first interval: " + nextInterval.toInstant().toString());
             }
         }
