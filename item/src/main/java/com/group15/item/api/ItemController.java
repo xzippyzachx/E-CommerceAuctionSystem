@@ -50,6 +50,12 @@ public class ItemController {
         return itemService.getItemsByIds(request.itm_ids);
     }
 
+    @PostMapping("reset-item-data")
+    public String resetAuctionData() {
+        itemService.resetItemData();
+
+        return "Item data reset";
+    }
 
 }
 

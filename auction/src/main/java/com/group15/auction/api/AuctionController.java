@@ -76,14 +76,14 @@ public class AuctionController {
         return auctionServiceFactory.getAuctionService(auction.getAuc_type()).createNewBid(auction, request.bid_amount);
     }
 
-    @PutMapping("reset-auction-data")
+    @PostMapping("reset-auction-data")
     public String resetAuctionData() {
         auctionServiceFactory.getAuctionService().resetAuctionData();
 
         auctionServiceFactory.getAuctionService("forward").dataReset();
         auctionServiceFactory.getAuctionService("dutch").dataReset();
 
-        return "Data reset";
+        return "Auction data reset";
     }
 
 }

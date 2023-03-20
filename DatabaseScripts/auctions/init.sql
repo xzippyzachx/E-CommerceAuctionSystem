@@ -27,5 +27,15 @@ BEGIN
 	INSERT INTO auctions (auc_id, auc_current_price, auc_itm_id, auc_start_price, auc_type, auc_state)
 	VALUES (nextval('auc_id_sequence'), 1000, 3, 1000, 'dutch', 'running');
 	INSERT INTO dutch_auctions (dch_id, dch_decrease_amount, dch_decrease_interval, dch_min_price, dch_end_delay)
-	VALUES (currval('auc_id_sequence'), 100, 5, 100, 10);
+	VALUES (currval('auc_id_sequence'), 50, 10, 100, 10);
+	INSERT INTO auctions (auc_id, auc_current_price, auc_itm_id, auc_start_price, auc_type, auc_state)
+	
+	VALUES (nextval('auc_id_sequence'), 1500, 4, 1000, 'dutch', 'running');
+	INSERT INTO dutch_auctions (dch_id, dch_decrease_amount, dch_decrease_interval, dch_min_price, dch_end_delay)
+	VALUES (currval('auc_id_sequence'), 100, 10, 100, 10);
+	
+	INSERT INTO auctions (auc_id, auc_current_price, auc_itm_id, auc_start_price, auc_type, auc_state)
+	VALUES (nextval('auc_id_sequence'), 150, 5, 150, 'forward', 'running');
+	INSERT INTO forward_auctions (fwd_id, fwd_end_time)
+	VALUES (currval('auc_id_sequence'), (CURRENT_TIMESTAMP AT time zone 'UTC') + (10 * interval '1 minute'));
 END; $$;

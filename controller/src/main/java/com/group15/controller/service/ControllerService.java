@@ -72,4 +72,14 @@ public class ControllerService {
         return response.getBody();
     }
 
+    public String resetData() {
+        String auctionUrl = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/reset-auction-data";
+        String itemUrl = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/reset-item-data";
+
+        this.restTemplate.postForEntity(auctionUrl, null, String.class); //ToDO: Try catch
+        this.restTemplate.postForEntity(itemUrl, null, String.class);
+
+        return "Data reset";
+    }
+
 }
