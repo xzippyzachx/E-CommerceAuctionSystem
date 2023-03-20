@@ -10,15 +10,18 @@ BEGIN
 	ALTER SEQUENCE itm_id_sequence RESTART WITH 1;
 
 	INSERT INTO items (itm_id, itm_name, itm_description , itm_shipping_cost)
-	VALUES (nextval('itm_id_sequence'), 'Bike', 'Two wheel vehicle', 3);
+	VALUES (nextval('itm_id_sequence'), 'Bike', 'Red bike in perfectly working condition. Has minor scratches', 10);
 	
 	INSERT INTO items (itm_id, itm_name, itm_description , itm_shipping_cost)
-	VALUES (nextval('itm_id_sequence'), 'Car', 'vehicle', 5);
+	VALUES (nextval('itm_id_sequence'), 'Tesla Model 3', '4 door fully electric sedan. 0-100 km/h in 3.3 seconds.', 100);
 	
 	INSERT INTO items (itm_id, itm_name, itm_description , itm_shipping_cost)
-	VALUES (nextval('itm_id_sequence'), 'Phone', 'Electornic Device', 4);
+	VALUES (nextval('itm_id_sequence'), 'iPhone 14', 'Pro-level camera. Whoa-level pics. iOS 16. 5G. Accessibility features. All-day battery life. 6 colors.', 8);
 	
 	INSERT INTO items (itm_id, itm_name, itm_description , itm_shipping_cost)
-	VALUES (nextval('itm_id_sequence'), 'Laptop', 'i7-67000', 6);
+	VALUES (nextval('itm_id_sequence'), 'Asus Laptop', 'Specs: intel i7-8700k GTX2060 Ti 16GB RAM 1T SSD', 5);
+	
+	INSERT INTO items (itm_id, itm_name, itm_description , itm_shipping_cost)
+	VALUES (nextval('itm_id_sequence'), 'Dressor', 'White 4 drawer dressor', 12);
 	
 END; $$;

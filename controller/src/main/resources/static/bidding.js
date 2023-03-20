@@ -18,11 +18,17 @@ client.connect({}, frame => {
         let data = JSON.parse(payload.body);
         let currentPrice = data.auc_current_price;
         let state = data.auc_state;
+        let type = data.auc_type;
 
         if(state == "running") {
             currentPriceElement.innerHTML = "Current Price: $" + currentPrice.toFixed(2);
             formElement.classList.remove("hide");
-            bidAmountElement.value = currentPrice + 10;
+
+            if(type === "dutch")
+                bidAmountElement.value = currentPrice;
+            else
+                bidAmountElement.value = currentPrice + 10;
+
         } else {
             formElement.classList.add("hide");
             completeMessageElement.innerHTML = "Auction is complete!";

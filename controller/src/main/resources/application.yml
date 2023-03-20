@@ -3,3 +3,6 @@ server:
 
 auctionServer:
   port: 8083
+
+itemServer:
+  port: 8082

@@ -34,4 +34,9 @@ public class ProxyController {
         return controllerService.getAuctionsByKey(request.keyword).toString();
     }
 
+    @PostMapping("reset-all-data")
+    public String resetData() {
+        return controllerService.resetData();
+    }
+
 }

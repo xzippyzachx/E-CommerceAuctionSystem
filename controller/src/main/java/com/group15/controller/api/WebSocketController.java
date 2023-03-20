@@ -28,7 +28,8 @@ public class WebSocketController {
     static record SendAuctionUpdateRequest(
             Integer auc_id,
             Double auc_current_price,
-            String auc_state
+            String auc_state,
+            String auc_type
     ) {}
     @PostMapping("auction-update")
     public void broadcastAuctionUpdate(@RequestBody SendAuctionUpdateRequest request) {

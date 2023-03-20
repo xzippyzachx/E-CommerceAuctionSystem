@@ -1,10 +1,10 @@
 
-
 .hide {
     display: none;
 }
 
-.auctions-list-container {
-    display: flex;
-    flex-flow: row nowrap;
+.reset-btn {
+    position: fixed;
+    right: 10px;
+    top: 10px;
 }

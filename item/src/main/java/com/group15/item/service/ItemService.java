@@ -36,4 +36,8 @@ public class ItemService {
     public List<Item> getItemsByIds(Integer[] itmIds) {
         return itemRepository.findAllById(Arrays.stream(itmIds).toList());
     }
+
+    public void resetItemData() {
+        itemRepository.resetItemData();
+    }
 }
