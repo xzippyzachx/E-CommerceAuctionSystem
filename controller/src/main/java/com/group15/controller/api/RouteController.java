@@ -62,6 +62,10 @@ public class RouteController {
             model.addAttribute("auc_current_price", auction.getDouble("auc_current_price"));
             model.addAttribute("auc_state", auction.getString("auc_state"));
             model.addAttribute("auc_type", auction.getString("auc_type"));
+            if(auction.getString("auc_type") == "forward")
+                model.addAttribute("fwd_end_time", auction.getString("fwd_end_time"));
+            if(auction.has("highest_bidder_usr_full_name"))
+                model.addAttribute("highest_bidder_usr_full_name", auction.getString("highest_bidder_usr_full_name"));
             model.addAttribute("itm_name", auction.getJSONObject("auc_itm_id").getString("itm_name"));
             model.addAttribute("itm_description", auction.getJSONObject("auc_itm_id").getString("itm_description"));
         }

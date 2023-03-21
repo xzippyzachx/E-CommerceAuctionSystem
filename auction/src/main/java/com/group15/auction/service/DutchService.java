@@ -5,9 +5,12 @@ import com.group15.auction.model.Bid;
 import com.group15.auction.model.DutchAuction;
 import com.group15.auction.repository.AuctionRepository;
 import com.group15.auction.repository.BidRepository;
+import org.json.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -53,8 +56,16 @@ public class DutchService extends AbstractService {
     @Override
     public void broadcastCurrentAuction(Auction auction) {
         String url = "http://localhost:" + env.getProperty("controllerServer.port") + "/api/broadcast/auction-update";
+        JSONObject payload = new JSONObject(auction);
 
-        HttpEntity<Auction> request = new HttpEntity<>(auction);
+        Bid bestBid = bidRepo.findBestByAuction(auction.getAuc_id());
+        if(bestBid != null) {
+            payload.put("highest_bidder_usr_full_name", "Zach Ross"); //ToDo: Pass actual user full name
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(payload.toString(), headers);
 
         this.restTemplate.postForEntity(url, request , null);
     }
