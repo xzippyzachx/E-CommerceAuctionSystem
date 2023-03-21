@@ -4,7 +4,10 @@ const CountDown = ((date, element) => {
 
     // Update the countdown every 1 second
     let x = setInterval(() => {
+        Update();
+    }, 1000);
 
+    let Update = (() => {
         // Get today's date and time
         let now = new Date().getTime();
 
@@ -26,5 +29,6 @@ const CountDown = ((date, element) => {
 
         // Output the result in an element with id="demo"
         element.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-    }, 1000);
+    });
+    Update();
 });

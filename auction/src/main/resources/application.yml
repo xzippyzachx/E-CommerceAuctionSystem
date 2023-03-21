@@ -15,7 +15,7 @@ spring:
         format_sql: true
         jdbc:
           time_zone: UTC
-    show_sql: true
+    show_sql: false
   main:
     web-application-type: servlet
 

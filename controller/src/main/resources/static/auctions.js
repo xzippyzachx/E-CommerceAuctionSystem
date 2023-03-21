@@ -1,4 +1,5 @@
 const tableElement = document.getElementById("auctions-table");
+const searchInput = document.getElementById("search-input");
 
 const UpdateAuctions = (() => {
     for (let i = 0; i < tableElement.children.length; i++) {
@@ -26,7 +27,7 @@ const SearchAuctions = (() => {
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
 
     let payload = {
-        keyword: document.getElementById("search-input").value
+        keyword: searchInput.value
     };
 
     Http.send(JSON.stringify(payload));
@@ -37,7 +38,14 @@ const SearchAuctions = (() => {
             }
         }
     }
-})
+});
+searchInput.addEventListener('keypress', (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        SearchAuctions();
+    }
+
+});
 
 const BuildAuctions = ((data) => {
 

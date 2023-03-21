@@ -16,24 +16,16 @@ public class WebSocketController {
     @Autowired
     private SimpMessagingTemplate template;
 
-//    int num = 0;
-
-//    @Scheduled(fixedRate = 1000)
-//    private void sendUpdate() {
-//        num++;
-//        broadcastAuctionUpdate(Integer.toString(num), 1);
-//        broadcastAuctionUpdate(Integer.toString(num + 10), 2);
-//    }
-
     static record SendAuctionUpdateRequest(
             Integer auc_id,
             Double auc_current_price,
             String auc_state,
-            String auc_type
+            String auc_type,
+            String highest_bidder_usr_full_name
     ) {}
     @PostMapping("auction-update")
     public void broadcastAuctionUpdate(@RequestBody SendAuctionUpdateRequest request) {
-        System.out.println("Current Price: " + request.auc_current_price);
+        System.out.println("Auction ID: " + request.auc_id + " Current Price: " + request.auc_current_price + " " + request.highest_bidder_usr_full_name);
         template.convertAndSend("/broadcast/auction-update/" + request.auc_id, request);
     }
 }
