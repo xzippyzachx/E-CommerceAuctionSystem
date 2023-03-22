@@ -38,7 +38,7 @@ public class AuctionController {
     static record GetAuctionRequest(
             Integer auc_id
     ) {}
-    @RequestMapping(value="get-auction", method={RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="get-auction", produces=MediaType.APPLICATION_JSON_VALUE, method={RequestMethod.GET, RequestMethod.POST})
     public String getAuction(@RequestBody GetAuctionRequest request) {
         return auctionServiceFactory.getAuctionService().getAuctionJSON(request.auc_id).toString();
     }
