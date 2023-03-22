@@ -8,12 +8,14 @@ public class ItemBean {
     private String itm_name;
     private String itm_description;
     private Double itm_shipping_cost;
+    private Double itm_expedited_cost;
 
-    public ItemBean(Integer itm_id, String itm_name, String itm_description, Double itm_shipping_cost) {
+    public ItemBean(Integer itm_id, String itm_name, String itm_description, Double itm_shipping_cost, Double itmExpeditedCost) {
         this.itm_id = itm_id;
         this.itm_name = itm_name;
         this.itm_description = itm_description;
         this.itm_shipping_cost = itm_shipping_cost;
+        itm_expedited_cost = itmExpeditedCost;
     }
 
     public ItemBean(){}
@@ -50,27 +52,35 @@ public class ItemBean {
         this.itm_shipping_cost = itm_shipping_cost;
     }
 
+    public Double getItm_expedited_cost() {
+        return itm_expedited_cost;
+    }
+
+    public void setItm_expedited_cost(Double itm_expedited_cost) {
+        this.itm_expedited_cost = itm_expedited_cost;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemBean itemBean = (ItemBean) o;
-        return Objects.equals(itm_id, itemBean.itm_id) && Objects.equals(itm_name, itemBean.itm_name) && Objects.equals(itm_description, itemBean.itm_description) && Objects.equals(itm_shipping_cost, itemBean.itm_shipping_cost);
+        return Objects.equals(itm_id, itemBean.itm_id) && Objects.equals(itm_name, itemBean.itm_name) && Objects.equals(itm_description, itemBean.itm_description) && Objects.equals(itm_shipping_cost, itemBean.itm_shipping_cost) && Objects.equals(itm_expedited_cost, itemBean.itm_expedited_cost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itm_id, itm_name, itm_description, itm_shipping_cost);
+        return Objects.hash(itm_id, itm_name, itm_description, itm_shipping_cost, itm_expedited_cost);
     }
 
     @Override
     public String toString() {
-        return "Item{" +
+        return "ItemBean{" +
                 "itm_id=" + itm_id +
                 ", itm_name='" + itm_name + '\'' +
                 ", itm_description='" + itm_description + '\'' +
                 ", itm_shipping_cost=" + itm_shipping_cost +
+                ", itm_expedited_cost=" + itm_expedited_cost +
                 '}';
     }
-
 }
