@@ -1,18 +1,19 @@
 package com.group15.user.service;
 
-import com.group15.user.model.Address;
-import com.group15.user.repository.AddressRepository;
-import com.group15.user.repository.UserRepository;
 import com.group15.user.model.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.group15.user.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserService {
 
+
+    /*
     private final UserRepository userRepo;
     private final AddressRepository addressRepo;
 
@@ -25,7 +26,9 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public User addUser(String usr_username, String usr_password, String usr_first_name, String usr_last_name, Address address) {
+    public User addUser(String usr_username, String usr_password,
+                        String usr_first_name, String usr_last_name,
+                        Address address) {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10, new SecureRandom());
         String encodedPassword = bCryptPasswordEncoder.encode(usr_password); //Todo: Was about to test creating a password hash
@@ -52,6 +55,34 @@ public class UserService {
         addressRepo.save(address);
 
         return address;
+    } */
+
+
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public void register(User user) {
+        userRepository.save(user);
+    }
+
+
+    //@Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsr_username(), user.getUsr_password(),
+                new ArrayList<>());
+    }
+
+
 
 }
