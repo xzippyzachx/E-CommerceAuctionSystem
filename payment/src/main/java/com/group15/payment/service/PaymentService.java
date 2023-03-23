@@ -29,20 +29,19 @@ public class PaymentService {
     }
 
     public String createNewPayment(Integer auc_id, Double pay_amount, Integer pay_card_number, String pay_person_name, Date pay_expiry_date, Integer pay_security_code, Boolean expedited_shipping) {
-
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
 
-        PostAuc aucpayload = new PostAuc(auc_id);
+        PostAuc auctionPayload = new PostAuc(auc_id);
 
-        HttpEntity<PostAuc> request = new HttpEntity<>(aucpayload);
+        HttpEntity<PostAuc> request = new HttpEntity<>(auctionPayload);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
-        JSONObject aucction = new JSONObject(response.getBody());
+        JSONObject auction = new JSONObject(response.getBody());
 
-        double currentPrice = aucction.getDouble("auc_current_price");
-        double shippingCost = aucction.getJSONObject("auc_itm_id").getDouble("itm_shipping_cost");
-        double itmExpeditedCost = aucction.getJSONObject("auc_itm_id").getDouble("itm_expedited_cost");
+        double currentPrice = auction.getDouble("auc_current_price");
+        double shippingCost = auction.getJSONObject("auc_itm_id").getDouble("itm_shipping_cost");
+        double itmExpeditedCost = auction.getJSONObject("auc_itm_id").getDouble("itm_expedited_cost");
         double total = currentPrice + shippingCost;
         if (expedited_shipping) {
             total += itmExpeditedCost;
@@ -62,8 +61,6 @@ public class PaymentService {
         paymentrepository.save(payment);
 
         return "Payment Successful";
-
-
     }
 
     public Payment getPaymentReceipt(Integer pay_id) {
@@ -74,6 +71,10 @@ public class PaymentService {
         }
     }
 
+    public static record PostAuc(
+            Integer auc_id
+    ) {
+    }
     public String getCost(Integer auc_id) {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
 
@@ -83,11 +84,11 @@ public class PaymentService {
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
-        JSONObject aucction = new JSONObject(response.getBody());
+        JSONObject auction = new JSONObject(response.getBody());
 
-        double currentPrice = aucction.getDouble("auc_current_price");
-        double shippingCost = aucction.getJSONObject("auc_itm_id").getDouble("itm_shipping_cost");
-        double itmExpeditedCost = aucction.getJSONObject("auc_itm_id").getDouble("itm_expedited_cost");
+        double currentPrice = auction.getDouble("auc_current_price");
+        double shippingCost = auction.getJSONObject("auc_itm_id").getDouble("itm_shipping_cost");
+        double itmExpeditedCost = auction.getJSONObject("auc_itm_id").getDouble("itm_expedited_cost");
 
         JSONObject cost = new JSONObject();
         cost.put("auc_current_price", currentPrice);
@@ -96,10 +97,4 @@ public class PaymentService {
 
         return cost.toString();
     }
-
-    public static record PostAuc(
-            Integer auc_id
-    ) {
-    }
-
 }
