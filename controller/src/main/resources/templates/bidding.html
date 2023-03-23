@@ -22,10 +22,12 @@
             <div>
                 <h3>|Bid|</h3>
                 <p id="current-price" th:text="${'Current Price: $' + #numbers.formatDecimal(auc_current_price,2,2,'POINT')}"></p>
+                <p>Highest Bidder: <span id="highest-bidder"></span></p>
+                <p th:if="${auc_type != 'dutch'}">Time Left: <span id="auction-countdown" th:text="${fwd_end_time}"></span></p>
 
                 <form id="bid-form" th:classappend="${auc_state != 'running' ? 'hide' : ''}">
                     <label for="bid-amount">Amount</label>
-                    <input id="bid-amount" type="number" th:classappend="${auc_type == 'dutch' ? 'hide' : ''}" th:value="${auc_type == 'dutch' ? auc_current_price : auc_current_price + 10}"></input>
+                    <input id="bid-amount" type="number" keypress="BidButton()" th:classappend="${auc_type == 'dutch' ? 'hide' : ''}" th:value="${auc_type == 'dutch' ? auc_current_price : auc_current_price + 10}"></input>
                     <button id="bid-button" type="button" onclick="BidButton()" th:text="${auc_type == 'forward' ? 'Bid' : 'Buy'}"></button>
                 </form>
 
@@ -41,6 +43,9 @@
     <script th:inline="javascript">
         let auc_id = [[${auc_id}]];
     </script>
+    <script th:src="@{/countDown.js}"></script>
     <script th:src="@{/bidding.js}" th:inline="javascript"></script>
+
+    <script th:src="@{/resetData.js}"></script>
 
 </html>
