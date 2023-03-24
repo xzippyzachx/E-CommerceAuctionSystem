@@ -26,7 +26,8 @@ public class RouteController {
             Double auc_current_price,
             String auc_type,
             String auc_state,
-            String fwd_end_time
+            String fwd_end_time,
+            String btn_name
     ) {}
     @GetMapping({"/", "auctions"})
     public String auctions(Model model) {
@@ -36,13 +37,28 @@ public class RouteController {
 
         for (int i = 0; i < auctions.length(); i++) {
             JSONObject auction = auctions.getJSONObject(i);
+
+            String btn_name = "bid";
+            switch (auction.getString("auc_state")) {
+                case "running":
+                    btn_name = "Bid";
+                    break;
+                case "complete":
+                    btn_name = "Pay";
+                    break;
+                case "paid":
+                    btn_name = "View";
+                    break;
+            }
+
             auctionRecords.add(new AuctionRecord(
                     auction.getInt("auc_id"),
                     auction.getJSONObject("auc_itm_id").getString("itm_name"),
                     auction.getDouble("auc_current_price"),
                     auction.getString("auc_type"),
                     auction.getString("auc_state"),
-                    auction.has("fwd_end_time") ? auction.getString("fwd_end_time") : ""
+                    auction.has("fwd_end_time") ? auction.getString("fwd_end_time") : "",
+                    btn_name
             ));
         }
 
