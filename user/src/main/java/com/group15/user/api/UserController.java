@@ -2,6 +2,9 @@ package com.group15.user.api;
 
 import com.group15.user.model.User;
 import com.group15.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -10,12 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RequestMapping("api/users")
 @RestController
 public class UserController {
 
 
-//    private final UserService userService;
+ //   private final UserService userService;
 //
 //    @Autowired
 //    public UserController(UserService userService) {
@@ -55,6 +60,28 @@ public class UserController {
         public UserController(UserService userService) {
             this.userService = userService;
         }
+
+
+//    public ArrayList<> get-user(Long id){
+//        User user = userService.getUser(id);
+//        if (user == null) {
+//            throw new UsernameNotFoundException("User not found");
+//        }
+//        return new org.springframework.security.core.userdetails.UserDetails(user.getUsr_username(), user.getUsr_password(),
+//                user.getUsr_first_name(),user.getUsr_last_name(),user.getUsr_street_name(),user.getUsr_street_number(),
+//                user.getUsr_city(),user.getUsr_province(),user.getUsr_country(),user.getUsr_postal_code(),
+//                new ArrayList<>());
+//    }
+
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getUserById(@PathVariable int id) {
+        Map<String, Object> user = jdbcTemplate.queryForMap("SELECT usr_username, usr_first_name, usr_last_name, usr_street_number, usr_street_name FROM users WHERE usr_id=?", id);
+        return ResponseEntity.ok(user);
+    }
 
         @GetMapping("/login") // "/signup"
         public String showLoginPage() {
