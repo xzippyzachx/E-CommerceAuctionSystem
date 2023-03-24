@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8">
+        <title>Receipt Page</title>
+    </head>
+    <body>
+        <h1>Receipt Page</h1>
+
+        <div>
+            <h3>|Receipt|</h3>
+            <p th:text="${'First Name: '}"></p>
+            <p th:text="${'Last Name: '}"></p>
+            <p th:text="${'Street: '}"></p>
+            <p th:text="${'Number: '}"></p>
+            <p th:text="${'Province: '}"></p>
+            <p th:text="${'Country: '}"></p>
+            <p th:text="${'Postal Code: '}"></p>
+            <p th:text="${'Total Paid: $' + pay_amount}"></p>
+        </div>
+
+        <div>
+            <h3>|Shipping|</h3>
+
+            <p>Your item will ship in 3 days</p>
+        </div>
+
+        <button id="back-button" type="button" onclick="window.location.href = 'http://localhost:8080/auctions'">Back</button>
+
+    </body>
+</html>

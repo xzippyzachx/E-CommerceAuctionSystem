@@ -11,6 +11,7 @@ const bidAmountElement = document.getElementById("bid-amount");
 const highestBidderElement = document.getElementById("highest-bidder");
 const formElement = document.getElementById("bid-form");
 const countdownChild = document.getElementById("auction-countdown");
+const payBtn = document.getElementById("pay-button");
 
 if(countdownChild != null && countdownChild.innerHTML !== "")
     CountDown(countdownChild.innerHTML, countdownChild);
@@ -38,9 +39,15 @@ client.connect({}, frame => {
             else
                 bidAmountElement.value = currentPrice + 10;
 
-        } else {
+        } else if(state === "complete") {
             formElement.classList.add("hide");
+            if(highestBidder)
+                payBtn.classList.remove("hide");
             completeMessageElement.innerHTML = "Auction is complete!";
+        } else if(state === "paid") {
+            formElement.classList.add("hide");
+            payBtn.classList.add("hide");
+            completeMessageElement.innerHTML = "Auction is paid!";
         }
 
     });
@@ -73,6 +80,10 @@ bidAmountElement.addEventListener('keypress', (event) => {
         event.preventDefault();
         BidButton();
     }
+});
+
+const PayButton = (() => {
+    window.location.href = `http://localhost:8080/payment?auc_id=${auc_id}`
 });
 
 window.onpopstate = function() {

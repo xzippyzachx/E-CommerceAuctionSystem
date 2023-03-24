@@ -28,16 +28,8 @@ public class PaymentService {
 
     }
 
-    public String createNewPayment(Integer auc_id, Double pay_amount, Integer pay_card_number, String pay_person_name, Date pay_expiry_date, Integer pay_security_code, Boolean expedited_shipping) {
-        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
-
-        PostAuc auctionPayload = new PostAuc(auc_id);
-
-        HttpEntity<PostAuc> request = new HttpEntity<>(auctionPayload);
-
-        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
-
-        JSONObject auction = new JSONObject(response.getBody());
+    public String createNewPayment(Integer auc_id, Double pay_amount, Long pay_card_number, String pay_person_name, Date pay_expiry_date, Integer pay_security_code, Boolean expedited_shipping) {
+        JSONObject auction = getAuction(auc_id);
 
         double currentPrice = auction.getDouble("auc_current_price");
         double shippingCost = auction.getJSONObject("auc_itm_id").getDouble("itm_shipping_cost");
@@ -58,33 +50,38 @@ public class PaymentService {
         payment.setPay_person_name(pay_person_name);
         payment.setPay_expiry_date(pay_expiry_date);
         payment.setPay_security_code(pay_security_code);
-        paymentrepository.save(payment);
+
+        Integer pay_id = paymentrepository.save(payment).getPay_id();
+
+        auctionPaid(auc_id, pay_id);
 
         return "Payment Successful";
     }
 
-    public Payment getPaymentReceipt(Integer pay_id) {
-        if (paymentrepository.findById(pay_id).isPresent()) {
-            return paymentrepository.findById(pay_id).get();
-        } else {
-            return null;
-        }
+    public String getPaymentReceipt(Integer auc_id) {
+        JSONObject payload = new JSONObject();
+
+        JSONObject auction = getAuction(auc_id);
+
+        if(!auction.has("auc_pay_id"))
+            return "This auction is not paid";
+
+        Payment payment = null;
+        if(paymentrepository.findById(auction.getInt("auc_pay_id")).isPresent())
+            payment = paymentrepository.findById(auction.getInt("auc_pay_id")).get();
+
+        //ToDO: Get user data
+
+        payload.put("pay_amount", payment.getPay_amount());
+
+        return payload.toString();
     }
 
     public static record PostAuc(
             Integer auc_id
-    ) {
-    }
-    public String getCost(Integer auc_id) {
-        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
-
-        PostAuc aucpayload = new PostAuc(auc_id);
-
-        HttpEntity<PostAuc> request = new HttpEntity<>(aucpayload);
-
-        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
-
-        JSONObject auction = new JSONObject(response.getBody());
+    ) {}
+    public JSONObject getCost(Integer auc_id) {
+        JSONObject auction = getAuction(auc_id);
 
         double currentPrice = auction.getDouble("auc_current_price");
         double shippingCost = auction.getJSONObject("auc_itm_id").getDouble("itm_shipping_cost");
@@ -95,6 +92,38 @@ public class PaymentService {
         cost.put("itm_shipping_cost", shippingCost);
         cost.put("itm_expedited_cost", itmExpeditedCost);
 
-        return cost.toString();
+        return cost;
+    }
+
+    public void resetPaymentData() {
+        paymentrepository.resetPaymentData();
+    }
+
+    private JSONObject getAuction(Integer auc_id) {
+        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
+
+        PostAuc auctionPayload = new PostAuc(auc_id);
+
+        HttpEntity<PostAuc> request = new HttpEntity<>(auctionPayload);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return new JSONObject(response.getBody());
+    }
+
+    public static record PostAuctionPaid(
+            Integer auc_id,
+            Integer pay_id
+    ) {}
+    private String auctionPaid(Integer auc_id, Integer pay_id) {
+        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/auction-paid";
+
+        PostAuctionPaid auctionPaidPayload = new PostAuctionPaid(auc_id, pay_id);
+
+        HttpEntity<PostAuctionPaid> request = new HttpEntity<>(auctionPaidPayload);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return response.getBody();
     }
 }
