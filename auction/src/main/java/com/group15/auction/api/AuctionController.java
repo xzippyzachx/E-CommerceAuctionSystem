@@ -76,6 +76,15 @@ public class AuctionController {
         return auctionServiceFactory.getAuctionService(auction.getAuc_type()).createNewBid(auction, request.bid_amount);
     }
 
+    static record NewAuctionPaidRequest(
+            Integer auc_id,
+            Integer pay_id
+    ) {}
+    @PostMapping("auction-paid")
+    public String newBid(@RequestBody NewAuctionPaidRequest request) {
+        return auctionServiceFactory.getAuctionService().auctionPaid(request.auc_id, request.pay_id);
+    }
+
     @PostMapping("reset-auction-data")
     public String resetAuctionData() {
         auctionServiceFactory.getAuctionService().resetAuctionData();

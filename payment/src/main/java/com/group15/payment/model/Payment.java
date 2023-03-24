@@ -7,25 +7,23 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "payment")
+@Table(name = "payments")
 public class Payment {
 
     @Id
     @SequenceGenerator(
-            name = "payment_id_sequence",
-            sequenceName = "payment_id_sequence",
+            name = "pay_id_sequence",
+            sequenceName = "pay_id_sequence",
             allocationSize = 1
     )
-
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "payment_id_sequence"
+            generator = "pay_id_sequence"
     )
-
     private Integer pay_id;
     private Integer pay_usr_id;
     private Double pay_amount;
-    private Integer pay_card_number;
+    private Long pay_card_number;
     private String pay_person_name;
     private Date pay_expiry_date;
     private Integer pay_security_code;
@@ -33,7 +31,7 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(Integer pay_id, Integer pay_usr_id, Double pay_amount, Integer pay_card_number, String pay_person_name, Date pay_expiry_date, Integer pay_security_code) {
+    public Payment(Integer pay_id, Integer pay_usr_id, Double pay_amount, Long pay_card_number, String pay_person_name, Date pay_expiry_date, Integer pay_security_code) {
         this.pay_id = pay_id;
         this.pay_usr_id = pay_usr_id;
         this.pay_amount = pay_amount;
@@ -79,11 +77,11 @@ public class Payment {
         this.pay_amount = pay_amount;
     }
 
-    public Integer getPay_card_number() {
+    public Long getPay_card_number() {
         return pay_card_number;
     }
 
-    public void setPay_card_number(Integer pay_card_number) {
+    public void setPay_card_number(Long pay_card_number) {
         this.pay_card_number = pay_card_number;
     }
 

@@ -1,6 +1,6 @@
 package com.group15.controller.service;
 
-import com.group15.controller.bean.Auction;
+import com.group15.controller.api.ProxyController;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -30,9 +30,9 @@ public class ControllerService {
         GetAuction auctionPayload = new GetAuction(auc_id);
         HttpEntity<GetAuction> request = new HttpEntity<>(auctionPayload);
 
-        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+        ResponseEntity<String> auctionResponse = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
-        return new JSONObject(response.getBody());
+        return  new JSONObject(auctionResponse.getBody());
     }
 
     public JSONArray getAllAuctions() {
@@ -72,12 +72,52 @@ public class ControllerService {
         return response.getBody();
     }
 
+    public static record GetCost(
+            Integer auc_id
+    ) {}
+    public JSONObject getCost(Integer auc_id) {
+        String url = "http://localhost:" + env.getProperty("paymentServer.port") + "/api/payments/get-cost";
+
+        GetCost costPayload = new GetCost(auc_id);
+        HttpEntity<GetCost> request = new HttpEntity<>(costPayload);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return  new JSONObject(response.getBody());
+    }
+
+    public String newPayment(ProxyController.NewPaymentRequest payload) {
+        String url = "http://localhost:" + env.getProperty("paymentServer.port") + "/api/payments/new-payment";
+
+        HttpEntity<ProxyController.NewPaymentRequest> request = new HttpEntity<>(payload);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return response.getBody();
+    }
+
+    public static record GetReceipt(
+            Integer auc_id
+    ) {}
+    public JSONObject getReceipt(Integer auc_id) {
+        String url = "http://localhost:" + env.getProperty("paymentServer.port") + "/api/payments/get-receipt";
+
+        GetReceipt receiptPayload = new GetReceipt(auc_id);
+        HttpEntity<GetReceipt> request = new HttpEntity<>(receiptPayload);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return new JSONObject(response.getBody());
+    }
+
     public String resetData() {
         String auctionUrl = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/reset-auction-data";
         String itemUrl = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/reset-item-data";
+        String paymentUrl = "http://localhost:" + env.getProperty("paymentServer.port") + "/api/payments/reset-payment-data";
 
         this.restTemplate.postForEntity(auctionUrl, null, String.class); //ToDO: Try catch
         this.restTemplate.postForEntity(itemUrl, null, String.class);
+        this.restTemplate.postForEntity(paymentUrl, null, String.class);
 
         return "Data reset";
     }

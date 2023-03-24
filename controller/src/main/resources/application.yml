@@ -6,3 +6,6 @@ auctionServer:
 
 itemServer:
   port: 8082
+
+paymentServer:
+  port: 8084

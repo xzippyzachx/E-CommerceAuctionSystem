@@ -81,10 +81,15 @@ public class AuctionService {
 
         if(auctionRepo.findById(auc_id).isPresent()) {
             Auction auction = auctionRepo.findById(auc_id).get();
+            Bid bestBid = bidRepo.findBestByAuction(auc_id);
+
             JSONObject auctionJSON = new JSONObject(auction);
 
             ItemBean itemBean = getItem(auction.getAuc_itm_id());
             auctionJSON.put("auc_itm_id", new JSONObject(itemBean));
+            if(bestBid != null) {
+                auctionJSON.put("highest_bidder_usr_full_name", "Zach Ross"); //ToDo: Pass actual user full name
+            }
 
             return auctionJSON;
         } else {
@@ -110,10 +115,6 @@ public class AuctionService {
 
     public Bid getAuctionBestBid(Integer auc_id) {
         return bidRepo.findBestByAuction(auc_id);
-    }
-
-    public void resetAuctionData() {
-        auctionRepo.resetAuctionData();
     }
 
     public static record PostItem(
@@ -156,6 +157,24 @@ public class AuctionService {
         ResponseEntity<ItemBean[]> response = this.restTemplate.postForEntity(url, request, ItemBean[].class); //ToDO: Try catch
 
         return Arrays.stream(response.getBody()).toList();
+    }
+
+    public String auctionPaid(Integer auc_id, Integer pay_id) {
+        if(auctionRepo.findById(auc_id).isPresent()) {
+            Auction auction = auctionRepo.findById(auc_id).get();
+            auction.setAuc_pay_id(pay_id);
+            auction.setAuc_state("paid");
+
+            auctionRepo.save(auction);
+        } else {
+            return "Auction does not exist";
+        }
+
+        return "Auction paid successfully";
+    }
+
+    public void resetAuctionData() {
+        auctionRepo.resetAuctionData();
     }
 
 }

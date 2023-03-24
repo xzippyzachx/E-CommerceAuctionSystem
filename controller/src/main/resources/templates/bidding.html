@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <link rel="stylesheet" href="styles.css">
-        <meta charset="UTF-8" />
+        <meta charset="UTF-8"/>
         <title>Bidding Page</title>
     </head>
     <body>
@@ -22,16 +22,18 @@
             <div>
                 <h3>|Bid|</h3>
                 <p id="current-price" th:text="${'Current Price: $' + #numbers.formatDecimal(auc_current_price,2,2,'POINT')}"></p>
-                <p>Highest Bidder: <span id="highest-bidder"></span></p>
+                <p>Highest Bidder: <span id="highest-bidder" th:text="${highest_bidder_usr_full_name}"></span></p>
                 <p th:if="${auc_type != 'dutch'}">Time Left: <span id="auction-countdown" th:text="${fwd_end_time}"></span></p>
 
                 <form id="bid-form" th:classappend="${auc_state != 'running' ? 'hide' : ''}">
                     <label for="bid-amount">Amount</label>
-                    <input id="bid-amount" type="number" keypress="BidButton()" th:classappend="${auc_type == 'dutch' ? 'hide' : ''}" th:value="${auc_type == 'dutch' ? auc_current_price : auc_current_price + 10}"></input>
+                    <input id="bid-amount" type="number" th:classappend="${auc_type == 'dutch' ? 'hide' : ''}" th:value="${auc_type == 'dutch' ? auc_current_price : auc_current_price + 10}"></input>
                     <button id="bid-button" type="button" onclick="BidButton()" th:text="${auc_type == 'forward' ? 'Bid' : 'Buy'}"></button>
                 </form>
 
                 <p id="bid-message" th:text="${auc_state != 'running' ? 'Auction is complete!' : ''}"></p>
+
+                <button id="pay-button" type="button" onclick="PayButton()" th:classappend="${auc_state != 'complete' || highest_bidder_usr_full_name == null ? 'hide' : ''}">Pay</button>
             </div>
 
         </div>

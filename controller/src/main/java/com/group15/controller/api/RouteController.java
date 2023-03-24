@@ -1,6 +1,5 @@
 package com.group15.controller.api;
 
-import com.group15.controller.bean.Auction;
 import com.group15.controller.service.ControllerService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -71,5 +70,28 @@ public class RouteController {
         }
 
         return "bidding";
+    }
+
+    @GetMapping("payment")
+    public String payment(Model model, @RequestParam(name = "auc_id") Integer auc_id) {
+        JSONObject auction = controllerService.getAuction(auc_id);
+        JSONObject cost = controllerService.getCost(auc_id);
+
+        model.addAttribute("auc_id", auction.getInt("auc_id"));
+        model.addAttribute("auc_state", auction.getString("auc_state"));
+        model.addAttribute("auc_current_price", cost.getInt("auc_current_price"));
+        model.addAttribute("itm_shipping_cost", cost.getInt("itm_shipping_cost"));
+        model.addAttribute("itm_expedited_cost", cost.getInt("itm_expedited_cost"));
+
+        return "payment";
+    }
+
+    @GetMapping("receipt")
+    public String receipt(Model model, @RequestParam(name = "auc_id") Integer auc_id) {
+        JSONObject receipt = controllerService.getReceipt(auc_id);
+
+        model.addAttribute("pay_amount", receipt.getDouble("pay_amount"));
+
+        return "receipt";
     }
 }
