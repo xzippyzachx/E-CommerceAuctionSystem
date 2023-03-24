@@ -1,16 +1,14 @@
 package com.group15.controller.api;
 
 import com.group15.controller.bean.User;
+import com.group15.controller.service.AuthenicationService;
 import com.group15.controller.service.ControllerService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +17,11 @@ import java.util.Objects;
 @Controller
 public class RouteController {
     private final ControllerService controllerService;
+    private final AuthenicationService authenicationService;
 
-    public RouteController(ControllerService controllerService) {
+    public RouteController(ControllerService controllerService, AuthenicationService authenicationService) {
         this.controllerService = controllerService;
+        this.authenicationService = authenicationService;
     }
 
 
@@ -144,17 +144,23 @@ public class RouteController {
         return "redirect:/login";
     }
 
-//    @PostMapping("/login")
-//    public String login(@RequestParam String username, @RequestParam String password, Model model) {
-//        try {
-//            Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//            return "redirect:/home";
-//        } catch (AuthenticationException e) {
-//            model.addAttribute("error", "Invalid username or password");
-//            return "login";
-//        }
-//    }
+    static record Credentials(
+            String username,
+            String password
+    ) {}
+    @PostMapping("/login")
+    public String login(@RequestBody Credentials credentials, Model model) {
+        String response = authenicationService.authenticate(credentials.username, credentials.password);
+
+        System.out.println("Token: " + response);
+
+        if(!Objects.equals(response, "Error")) {
+            return "redirect:/auctions";
+        } else {
+            model.addAttribute("error", "Invalid username or password");
+            return "login";
+        }
+    }
 
 //    @GetMapping("/logout")
 //    public String logout() {
