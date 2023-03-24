@@ -1,53 +1,23 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--  <meta charset="UTF-8" />-->
-<!--  <title>Login</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Login</h1>-->
-<!--<form th:action="@{/login}" method="post">-->
-<!--  <div>-->
-<!--    <label>Username</label>-->
-<!--    <input type="text" name="username">-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    <label>Password</label>-->
-<!--    <input type="password" name="password">-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    <input type="submit" value="Login">-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    <a th:href="@{/signup}">Signup</a>-->
-<!--  </div>-->
-<!--  <div th:if="${param.error}">-->
-<!--    <p>Invalid username or password</p>-->
-<!--  </div>-->
-<!--</form>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-</head>
-<body>
-<h1>Login</h1>
-<form action="/login" method="post">
-  <div>
-    <label for="usr_username">Username:</label>
-    <input type="text" id="usr_username" name="usr_username" required>
-  </div>
-  <div>
-    <label for="usr_password">Password:</label>
-    <input type="password" id="usr_password" name="usr_password" required>
-  </div>
-  <button type="submit">Login</button>
-</form>
-<a href="/signup">Sign up</a>
-<p th:text="${error}"></p>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+    </head>
+    <body>
+        <h1>Login</h1>
+        <form action="/login" method="post">
+            <div>
+                <label for="usr_username">Username:</label>
+                <input type="text" id="usr_username" name="usr_username" required>
+            </div>
+            <div>
+                <label for="usr_password">Password:</label>
+                <input type="password" id="usr_password" name="usr_password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <a href="/signup">Sign up</a>
+        <p th:text="${error}"></p>
+    </body>
 </html>

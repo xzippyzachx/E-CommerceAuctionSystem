@@ -13,7 +13,17 @@ const UpdateAuctions = (() => {
 
         if(buttonChild != null) {
             buttonChild.addEventListener("click", () => {
-                window.location.href = `http://localhost:8080/bidding?auc_id=${auc_id}`
+                switch (buttonChild.value) {
+                    case "running":
+                        window.location.href = `http://localhost:8080/bidding?auc_id=${auc_id}`
+                        break;
+                    case "complete":
+                        window.location.href = `http://localhost:8080/payment?auc_id=${auc_id}`
+                        break;
+                    case "paid":
+                        window.location.href = `http://localhost:8080/receipt?auc_id=${auc_id}`
+                        break;
+                }
             })
         }
     }
@@ -61,6 +71,19 @@ const BuildAuctions = ((data) => {
     for (let a in data) {
         let auction = data[a];
 
+        let btnBame = "bid";
+        switch (auction.auc_state) {
+            case "running":
+                btnBame = "Bid";
+                break;
+            case "complete":
+                btnBame = "Pay";
+                break;
+            case "paid":
+                btnBame = "View";
+                break;
+        }
+
         tableElement.insertAdjacentHTML('beforeend',`
         <tr id="auc-id-${auction.auc_id}">
             <td>
@@ -79,7 +102,7 @@ const BuildAuctions = ((data) => {
                 <span>${auction.auc_state}</span>
             </td>
             <td>
-                <button class="auction-btn">Bid</button>
+                <button class="auction-btn" value="${auction.auc_state}">${btnBame}</button>
             </td>
         </tr>
         `)

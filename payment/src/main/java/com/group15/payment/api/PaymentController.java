@@ -51,7 +51,7 @@ public class PaymentController {
     }
 
     @PostMapping("reset-payment-data")
-    public String resetAuctionData() {
+    public String resetPaymentData() {
         paymentService.resetPaymentData();
         return "Payment data reset";
     }

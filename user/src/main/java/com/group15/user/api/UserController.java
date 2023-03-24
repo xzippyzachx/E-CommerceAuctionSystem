@@ -2,13 +2,12 @@ package com.group15.user.api;
 
 import com.group15.user.model.User;
 import com.group15.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -52,8 +51,6 @@ public class UserController {
 //
 //        return "Signed up";
 //    }
-//
-//    //Todo: Need to add other endpoints required
 
         private final UserService userService;
 
@@ -73,62 +70,37 @@ public class UserController {
 //                new ArrayList<>());
 //    }
 
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getUserById(@PathVariable int id) {
-        Map<String, Object> user = jdbcTemplate.queryForMap("SELECT usr_username, usr_first_name, usr_last_name, usr_street_number, usr_street_name FROM users WHERE usr_id=?", id);
-        return ResponseEntity.ok(user);
+    static record NewUserRequest(
+            Integer user_id
+    ) {}
+    @RequestMapping(value="get-user", produces= MediaType.APPLICATION_JSON_VALUE, method={RequestMethod.GET, RequestMethod.POST})
+    public User getUserById(@RequestBody NewUserRequest request) {
+        return userService.getUser(request.user_id);
     }
 
-        @GetMapping("/login") // "/signup"
-        public String showLoginPage() {
-            return "login";
+    static record NewUserDetailsRequest(
+            String usr_username
+    ) {}
+    @RequestMapping(value="get-user-details", produces= MediaType.APPLICATION_JSON_VALUE, method={RequestMethod.GET, RequestMethod.POST})
+    public UserDetails getUserById(@RequestBody NewUserDetailsRequest request) {
+        return userService.loadUserByUsername(request.usr_username);
+    }
+
+    @PostMapping("/sign-up")
+    public String signup(@RequestBody User user) {
+
+        if (userService.loadUserByUsername(user.getUsr_username()) != null) {
+            return "Username already exists";
         }
 
-        @GetMapping("/signup")
-        public String showSignupPage(Model model) {
-            model.addAttribute("user", new User());
-            return "signup";
-        }
+        userService.register(user);
 
-        @PostMapping("/signup") //take care of the @valid
-        public String signup(@ModelAttribute("user") /*@Valid */ User user, BindingResult result, Model model) {
-            if (result.hasErrors()) {
-                return "signup";
-            }
-            if (userService.loadUserByUsername(user.getUsr_username()) != null) {
-                model.addAttribute("error", "Username already exists");
-                return "signup";
-            }
-            userService.register(user);
-            model.addAttribute("message", "User created successfully");
-            return "redirect:/";
-        }
+        return "User created successfully";
+    }
 
-        @PostMapping("/login")
-        public String login(@RequestParam String username, @RequestParam String password, Model model) {
-            try {
-                Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                return "redirect:/home";
-            } catch (AuthenticationException e) {
-                model.addAttribute("error", "Invalid username or password");
-                return "login";
-            }
-        }
-
-        @GetMapping("/home")
-        public String showHomePage() {
-            return "home";
-        }
-
-        @GetMapping("/logout")
-        public String logout() {
-            SecurityContextHolder.getContext().setAuthentication(null);
-            return "redirect:/";
-        }
-
+    @PostMapping("reset-user-data")
+    public String resetUserData() {
+        userService.resetUserData();
+        return "user data reset";
+    }
 }

@@ -1,15 +1,20 @@
 package com.group15.controller.api;
 
+import com.group15.controller.bean.User;
 import com.group15.controller.service.ControllerService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class RouteController {
@@ -26,7 +31,8 @@ public class RouteController {
             Double auc_current_price,
             String auc_type,
             String auc_state,
-            String fwd_end_time
+            String fwd_end_time,
+            String btn_name
     ) {}
     @GetMapping({"/", "auctions"})
     public String auctions(Model model) {
@@ -36,13 +42,28 @@ public class RouteController {
 
         for (int i = 0; i < auctions.length(); i++) {
             JSONObject auction = auctions.getJSONObject(i);
+
+            String btn_name = "bid";
+            switch (auction.getString("auc_state")) {
+                case "running":
+                    btn_name = "Bid";
+                    break;
+                case "complete":
+                    btn_name = "Pay";
+                    break;
+                case "paid":
+                    btn_name = "View";
+                    break;
+            }
+
             auctionRecords.add(new AuctionRecord(
                     auction.getInt("auc_id"),
                     auction.getJSONObject("auc_itm_id").getString("itm_name"),
                     auction.getDouble("auc_current_price"),
                     auction.getString("auc_type"),
                     auction.getString("auc_state"),
-                    auction.has("fwd_end_time") ? auction.getString("fwd_end_time") : ""
+                    auction.has("fwd_end_time") ? auction.getString("fwd_end_time") : "",
+                    btn_name
             ));
         }
 
@@ -94,4 +115,50 @@ public class RouteController {
 
         return "receipt";
     }
+
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String showSignupPage(Model model) {
+        model.addAttribute("user", new User());
+        return "signup";
+    }
+
+    @PostMapping("/signup") //take care of the @valid
+    public String signup(@ModelAttribute("user") /*@Valid */ User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "signup";
+        }
+
+        String response = controllerService.signUp(user);
+
+        if (Objects.equals(response, "Username already exists")) {
+            model.addAttribute("error", response);
+            return "signup";
+        }
+
+        model.addAttribute("message", response);
+        return "redirect:/login";
+    }
+
+//    @PostMapping("/login")
+//    public String login(@RequestParam String username, @RequestParam String password, Model model) {
+//        try {
+//            Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            return "redirect:/home";
+//        } catch (AuthenticationException e) {
+//            model.addAttribute("error", "Invalid username or password");
+//            return "login";
+//        }
+//    }
+
+//    @GetMapping("/logout")
+//    public String logout() {
+//        SecurityContextHolder.getContext().setAuthentication(null);
+//        return "redirect:/";
+//    }
 }

@@ -43,7 +43,7 @@
                         <span th:text="${auc.auc_state}"></span>
                     </td>
                     <td>
-                        <button class="auction-btn">Bid</button>
+                        <button class="auction-btn" th:value="${auc.auc_state}" th:text="${auc.btn_name}">Bid</button>
                     </td>
                 </tr>
             </tbody>
