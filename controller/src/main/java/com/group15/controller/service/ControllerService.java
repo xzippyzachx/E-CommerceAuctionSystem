@@ -1,12 +1,15 @@
 package com.group15.controller.service;
 
 import com.group15.controller.api.ProxyController;
+import com.group15.controller.bean.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -108,6 +111,34 @@ public class ControllerService {
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
         return new JSONObject(response.getBody());
+    }
+
+    public String signUp(User user) {
+        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/sign-up";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("userServer.apiKey"));
+        HttpEntity<User> request = new HttpEntity<>(user, headers);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return response.getBody();
+    }
+
+    public static record GetUserDetails(
+            String usr_username
+    ) {}
+    public UserDetails getUserDetails(String username) {
+        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/get-user-details";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("userServer.apiKey"));
+        GetUserDetails userDetailsPayload = new GetUserDetails(username);
+        HttpEntity<GetUserDetails> request = new HttpEntity<>(userDetailsPayload, headers);
+
+        ResponseEntity<UserDetails> response = this.restTemplate.postForEntity(url, request, UserDetails.class); //ToDO: Try catch
+
+        return response.getBody();
     }
 
     public String resetData() {
