@@ -1,9 +1,13 @@
 
 Upload init files:
 
+docker cp C:\Users\Zachary\IdeaProjects\E-CommerceAuctionSystem\DatabaseScripts\users/init.sql postgres_users:/docker-entrypoint-initdb.d/init.sql
 docker cp C:\Users\Zachary\IdeaProjects\E-CommerceAuctionSystem\DatabaseScripts\auctions/init.sql postgres_auctions:/docker-entrypoint-initdb.d/init.sql
 docker cp C:\Users\Zachary\IdeaProjects\E-CommerceAuctionSystem\DatabaseScripts\items/init.sql postgres_items:/docker-entrypoint-initdb.d/init.sql
+docker cp C:\Users\Zachary\IdeaProjects\E-CommerceAuctionSystem\DatabaseScripts\payments/init.sql postgres_payments:/docker-entrypoint-initdb.d/init.sql
 
 Commit images changes:
+docker commit postgres_users xzippyzachx/postgres_users
+docker commit postgres_payments xzippyzachx/postgres_payments
 docker commit postgres_auctions xzippyzachx/postgres_auctions
 docker commit postgres_items xzippyzachx/postgres_items
