@@ -8,19 +8,24 @@
     <body>
         <h1>Receipt Page</h1>
 
-        <div>
+        <div th:if="${usr_id != owner_usr_id}">
+            <p>You have no receipt for this auction</p>
+        </div>
+
+        <div th:if="${usr_id == owner_usr_id}">
             <h3>|Receipt|</h3>
-            <p th:text="${'First Name: '}"></p>
-            <p th:text="${'Last Name: '}"></p>
-            <p th:text="${'Street: '}"></p>
-            <p th:text="${'Number: '}"></p>
-            <p th:text="${'Province: '}"></p>
-            <p th:text="${'Country: '}"></p>
-            <p th:text="${'Postal Code: '}"></p>
+            <p th:text="${'First Name: ' + usr_first_name}"></p>
+            <p th:text="${'Last Name: ' + usr_last_name}"></p>
+            <p th:text="${'Street: ' + usr_street_name}"></p>
+            <p th:text="${'Number: ' + usr_street_number}"></p>
+            <p th:text="${'City: ' + usr_city}"></p>
+            <p th:text="${'Province: ' + usr_province}"></p>
+            <p th:text="${'Country: ' + usr_country}"></p>
+            <p th:text="${'Postal Code: ' + usr_postal_code}"></p>
             <p th:text="${'Total Paid: $' + pay_amount}"></p>
         </div>
 
-        <div>
+        <div th:if="${usr_id == owner_usr_id}">
             <h3>|Shipping|</h3>
 
             <p>Your item will ship in 3 days</p>

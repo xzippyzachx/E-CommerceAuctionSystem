@@ -64,16 +64,22 @@ public class AuctionController {
         return auctionServiceFactory.getAuctionService().getAuctionBestBid(request.auc_id);
     }
 
+    @RequestMapping(value="get-best-bid-user", produces=MediaType.APPLICATION_JSON_VALUE, method={RequestMethod.GET, RequestMethod.POST})
+    public String getAuctionBestBidUser(@RequestBody GetBestBidRequest request) {
+        return auctionServiceFactory.getAuctionService().getAuctionBestBidUser(request.auc_id);
+    }
+
     static record NewBidRequest(
             Integer auc_id,
-            Double bid_amount
+            Double bid_amount,
+            Integer usr_id
     ) {}
     @PostMapping("new-bid")
     public String newBid(@RequestBody NewBidRequest request) {
 
         Auction auction = auctionServiceFactory.getAuctionService().getAuction(request.auc_id);
 
-        return auctionServiceFactory.getAuctionService(auction.getAuc_type()).createNewBid(auction, request.bid_amount);
+        return auctionServiceFactory.getAuctionService(auction.getAuc_type()).createNewBid(auction, request.bid_amount, request.usr_id);
     }
 
     static record NewAuctionPaidRequest(

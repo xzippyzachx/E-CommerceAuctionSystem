@@ -20,6 +20,9 @@ const UpdateAuctions = (() => {
                     case "complete":
                         window.location.href = `http://localhost:8080/payment?auc_id=${auc_id}`
                         break;
+                    case "expired":
+                        window.location.href = `http://localhost:8080/bidding?auc_id=${auc_id}`
+                        break;
                     case "paid":
                         window.location.href = `http://localhost:8080/receipt?auc_id=${auc_id}`
                         break;
@@ -72,13 +75,16 @@ const BuildAuctions = ((data) => {
     for (let a in data) {
         let auction = data[a];
 
-        let btnBame = "bid";
+        let btnBame = "Bid";
         switch (auction.auc_state) {
             case "running":
                 btnBame = "Bid";
                 break;
             case "complete":
                 btnBame = "Pay";
+                break;
+            case "expired":
+                btnBame = "View";
                 break;
             case "paid":
                 btnBame = "View";

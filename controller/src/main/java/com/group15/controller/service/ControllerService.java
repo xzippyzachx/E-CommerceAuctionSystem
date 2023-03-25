@@ -64,12 +64,13 @@ public class ControllerService {
 
     public static record PostBid(
             Integer auc_id,
-            Double bid_amount
+            Double bid_amount,
+            Integer usr_id
     ) {}
-    public String newBid(Integer auc_id, Double bid_amount) {
+    public String newBid(Integer auc_id, Double bid_amount, Integer usr_id) {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/new-bid";
 
-        PostBid bidPayload = new PostBid(auc_id, bid_amount);
+        PostBid bidPayload = new PostBid(auc_id, bid_amount, usr_id);
         HttpEntity<PostBid> request = new HttpEntity<>(bidPayload);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch

@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -26,7 +27,7 @@ public class DutchService extends AbstractService {
     }
 
     @Override
-    public String createNewBid(Auction auction, Double bid_amount) {
+    public String createNewBid(Auction auction, Double bid_amount, Integer usr_id) {
         Date now = new Date();
 
         if(!auction.getAuc_state().equals("running"))
@@ -39,7 +40,7 @@ public class DutchService extends AbstractService {
 
         newBid.setBid_auc_id(auction);
         newBid.setBid_amount(bid_amount);
-        newBid.setBid_usr_id(1); //TODO: Pass actual usr_id
+        newBid.setBid_usr_id(usr_id);
         newBid.setBid_time(now);
 
         bidRepo.save(newBid);
@@ -60,7 +61,10 @@ public class DutchService extends AbstractService {
 
         Bid bestBid = bidRepo.findBestByAuction(auction.getAuc_id());
         if(bestBid != null) {
-            payload.put("highest_bidder_usr_full_name", "Zach Ross"); //ToDo: Pass actual user full name
+            JSONObject userJSON = getUser(bestBid.getBid_usr_id());
+            String fullName = userJSON.getString("usr_first_name") + " " + userJSON.getString("usr_last_name");
+            payload.put("highest_bidder_usr_full_name", fullName);
+            payload.put("highest_bidder_usr_id", bestBid.getBid_usr_id());
         }
 
         HttpHeaders headers = new HttpHeaders();
@@ -137,7 +141,7 @@ public class DutchService extends AbstractService {
             TimerTask tt = new TimerTask() {
                 @Override
                 public void run() {
-                    CompleteAuction(auction.getAuc_id());
+                    ExpireAuction(auction.getAuc_id());
                 };
             };
             Date nextInterval = new Date(now.getTime() + (1000L * ((DutchAuction) auction).getDch_end_delay()));
@@ -149,15 +153,31 @@ public class DutchService extends AbstractService {
         broadcastCurrentAuction(auction);
     }
 
-    private void CompleteAuction(Integer auc_id) {
+    private void ExpireAuction(Integer auc_id) {
         System.out.println("Ending dutch auction AuctionId: " + auc_id + " [" + new Date().toInstant().toString() + "]");
 
         Auction auction = auctionRepo.findById(auc_id).get();
 
-        auction.setAuc_state("complete");
+        auction.setAuc_state("expired");
 
         auctionRepo.save(auction);
 
         broadcastCurrentAuction(auction);
+    }
+
+    public static record GetUser(
+            Integer usr_id
+    ) {}
+    private JSONObject getUser(Integer usr_id) {
+        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/get-user";
+
+        AuctionService.GetUser userPayload = new AuctionService.GetUser(usr_id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("userServer.apiKey"));
+        HttpEntity<AuctionService.GetUser> request = new HttpEntity<>(userPayload, headers);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return new JSONObject(response.getBody());
     }
 }

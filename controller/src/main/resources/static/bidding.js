@@ -26,6 +26,7 @@ client.connect({}, frame => {
         let state = data.auc_state;
         let type = data.auc_type;
         let highestBidder = data.highest_bidder_usr_full_name;
+        let highest_bidder_usr_id = data.highest_bidder_usr_id;
 
         currentPriceElement.innerHTML = "Current Price: $" + currentPrice.toFixed(2);
         if(highestBidder)
@@ -41,7 +42,7 @@ client.connect({}, frame => {
 
         } else if(state === "complete") {
             formElement.classList.add("hide");
-            if(highestBidder)
+            if(highestBidder && highest_bidder_usr_id === usr_id)
                 payBtn.classList.remove("hide");
             completeMessageElement.innerHTML = "Auction is complete!";
         } else if(state === "paid") {

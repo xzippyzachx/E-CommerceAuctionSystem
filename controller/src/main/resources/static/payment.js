@@ -10,14 +10,16 @@ const totalCostElement = document.getElementById("total-cost");
 
 let totalCost = auc_current_price + itm_shipping_cost;
 
-expeditedInput.addEventListener("change", () => {
-    if(expeditedInput.checked === true)
-        totalCost = auc_current_price + itm_shipping_cost + itm_expedited_cost;
-    else
-        totalCost = auc_current_price + itm_shipping_cost;
+if(expeditedInput != null) {
+    expeditedInput.addEventListener("change", () => {
+        if(expeditedInput.checked === true)
+            totalCost = auc_current_price + itm_shipping_cost + itm_expedited_cost;
+        else
+            totalCost = auc_current_price + itm_shipping_cost;
 
-    totalCostElement.innerHTML = `Total Cost: $${totalCost}`;
-});
+        totalCostElement.innerHTML = `Total Cost: $${totalCost}`;
+    });
+}
 
 const SubmitButton = (() => {
 

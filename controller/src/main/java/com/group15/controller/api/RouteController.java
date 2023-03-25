@@ -3,12 +3,11 @@ package com.group15.controller.api;
 import com.group15.controller.bean.User;
 import com.group15.controller.service.AuthenicationService;
 import com.group15.controller.service.ControllerService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,7 +40,7 @@ public class RouteController {
             String btn_name
     ) {}
     @GetMapping({"/", "auctions"})
-    public String auctions(Model model) {
+    public String auctions(Authentication authentication, Model model) {
 
         JSONArray auctions = controllerService.getAllAuctions();
         List<AuctionRecord> auctionRecords = new ArrayList<>();
@@ -49,13 +48,16 @@ public class RouteController {
         for (int i = 0; i < auctions.length(); i++) {
             JSONObject auction = auctions.getJSONObject(i);
 
-            String btn_name = "bid";
+            String btn_name = "Bid";
             switch (auction.getString("auc_state")) {
                 case "running":
                     btn_name = "Bid";
                     break;
                 case "complete":
                     btn_name = "Pay";
+                    break;
+                case "expired":
+                    btn_name = "View";
                     break;
                 case "paid":
                     btn_name = "View";
@@ -74,12 +76,13 @@ public class RouteController {
         }
 
         model.addAttribute("auctions", auctionRecords);
+        model.addAttribute("user_id", authenicationService.getUserId(authentication.getName()));
 
         return "auctions";
     }
 
     @GetMapping("bidding")
-    public String bidding(Model model, @RequestParam(name = "auc_id") Integer auc_id) {
+    public String bidding(Authentication authentication, Model model, @RequestParam(name = "auc_id") Integer auc_id) {
 
         JSONObject auction = controllerService.getAuction(auc_id);
 
@@ -92,15 +95,19 @@ public class RouteController {
                 model.addAttribute("fwd_end_time", auction.getString("fwd_end_time"));
             if(auction.has("highest_bidder_usr_full_name"))
                 model.addAttribute("highest_bidder_usr_full_name", auction.getString("highest_bidder_usr_full_name"));
+            if(auction.has("highest_bidder_usr_id"))
+                model.addAttribute("highest_bidder_usr_id", auction.getInt("highest_bidder_usr_id"));
             model.addAttribute("itm_name", auction.getJSONObject("auc_itm_id").getString("itm_name"));
             model.addAttribute("itm_description", auction.getJSONObject("auc_itm_id").getString("itm_description"));
         }
+
+        model.addAttribute("usr_id", authenicationService.getUserId(authentication.getName()));
 
         return "bidding";
     }
 
     @GetMapping("payment")
-    public String payment(Model model, @RequestParam(name = "auc_id") Integer auc_id) {
+    public String payment(Authentication authentication, Model model, @RequestParam(name = "auc_id") Integer auc_id) {
         JSONObject auction = controllerService.getAuction(auc_id);
         JSONObject cost = controllerService.getCost(auc_id);
 
@@ -110,14 +117,38 @@ public class RouteController {
         model.addAttribute("itm_shipping_cost", cost.getInt("itm_shipping_cost"));
         model.addAttribute("itm_expedited_cost", cost.getInt("itm_expedited_cost"));
 
+        model.addAttribute("owner_usr_id", cost.getInt("usr_id"));
+        model.addAttribute("usr_first_name", cost.getString("usr_first_name"));
+        model.addAttribute("usr_last_name", cost.getString("usr_last_name"));
+        model.addAttribute("usr_street_name", cost.getString("usr_street_name"));
+        model.addAttribute("usr_street_number", cost.getInt("usr_street_number"));
+        model.addAttribute("usr_city", cost.getString("usr_city"));
+        model.addAttribute("usr_province", cost.getString("usr_province"));
+        model.addAttribute("usr_country", cost.getString("usr_country"));
+        model.addAttribute("usr_postal_code", cost.getString("usr_postal_code"));
+
+        model.addAttribute("usr_id", authenicationService.getUserId(authentication.getName()));
+
         return "payment";
     }
 
     @GetMapping("receipt")
-    public String receipt(Model model, @RequestParam(name = "auc_id") Integer auc_id) {
+    public String receipt(Authentication authentication, Model model, @RequestParam(name = "auc_id") Integer auc_id) {
         JSONObject receipt = controllerService.getReceipt(auc_id);
 
         model.addAttribute("pay_amount", receipt.getDouble("pay_amount"));
+
+        model.addAttribute("owner_usr_id", receipt.getInt("usr_id"));
+        model.addAttribute("usr_first_name", receipt.getString("usr_first_name"));
+        model.addAttribute("usr_last_name", receipt.getString("usr_last_name"));
+        model.addAttribute("usr_street_name", receipt.getString("usr_street_name"));
+        model.addAttribute("usr_street_number", receipt.getInt("usr_street_number"));
+        model.addAttribute("usr_city", receipt.getString("usr_city"));
+        model.addAttribute("usr_province", receipt.getString("usr_province"));
+        model.addAttribute("usr_country", receipt.getString("usr_country"));
+        model.addAttribute("usr_postal_code", receipt.getString("usr_postal_code"));
+
+        model.addAttribute("usr_id", authenicationService.getUserId(authentication.getName()));
 
         return "receipt";
     }
