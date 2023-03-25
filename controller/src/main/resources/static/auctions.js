@@ -35,6 +35,7 @@ const SearchAuctions = (() => {
     let url='http://localhost:8080/api/get-auctions-by-key';
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+    Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));
 
     let payload = {
         keyword: searchInput.value
@@ -109,4 +110,13 @@ const BuildAuctions = ((data) => {
     }
 
     UpdateAuctions();
+});
+
+getCookie = ((cookieName) => {
+    let cookie = {};
+    document.cookie.split(';').forEach(function(el) {
+        let [key,value] = el.split('=');
+        cookie[key.trim()] = value;
+    })
+    return cookie[cookieName];
 });

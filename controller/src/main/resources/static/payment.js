@@ -28,6 +28,7 @@ const SubmitButton = (() => {
     let url = 'http://localhost:8080/api/new-payment';
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+    Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));
 
     let payload = {
         auc_id: auc_id,
@@ -51,4 +52,13 @@ const SubmitButton = (() => {
 
 validateForm = (() => {
     return formElement.reportValidity();
+});
+
+getCookie = ((cookieName) => {
+    let cookie = {};
+    document.cookie.split(';').forEach(function(el) {
+        let [key,value] = el.split('=');
+        cookie[key.trim()] = value;
+    })
+    return cookie[cookieName];
 });

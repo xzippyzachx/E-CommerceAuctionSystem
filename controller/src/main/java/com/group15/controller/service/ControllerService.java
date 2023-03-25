@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+
 @Service
 public class ControllerService {
 
@@ -136,9 +138,12 @@ public class ControllerService {
         GetUserDetails userDetailsPayload = new GetUserDetails(username);
         HttpEntity<GetUserDetails> request = new HttpEntity<>(userDetailsPayload, headers);
 
-        ResponseEntity<UserDetails> response = this.restTemplate.postForEntity(url, request, UserDetails.class); //ToDO: Try catch
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
-        return response.getBody();
+        JSONObject responseJSON = new JSONObject(response.getBody());
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(responseJSON.getString("username"), responseJSON.getString("password"), new ArrayList<>());
+
+        return userDetails;
     }
 
     public String resetData() {

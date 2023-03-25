@@ -1,9 +1,9 @@
 package com.group15.controller.service;
 
 import com.group15.controller.security.JwtUtil;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -25,9 +25,14 @@ public class AuthenicationService {
 
         System.out.println(username + " " + password);
 
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(username, password)
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+        } catch (Exception e) {
+            return "Error";
+        }
+
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         if(userDetails != null) {

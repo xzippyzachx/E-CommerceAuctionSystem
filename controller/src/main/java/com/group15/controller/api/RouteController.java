@@ -3,10 +3,16 @@ package com.group15.controller.api;
 import com.group15.controller.bean.User;
 import com.group15.controller.service.AuthenicationService;
 import com.group15.controller.service.ControllerService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -144,27 +150,26 @@ public class RouteController {
         return "redirect:/login";
     }
 
-    static record Credentials(
-            String username,
-            String password
-    ) {}
     @PostMapping("/login")
-    public String login(@RequestBody Credentials credentials, Model model) {
-        String response = authenicationService.authenticate(credentials.username, credentials.password);
+    public String login(@RequestBody MultiValueMap<String, String> formData, Model model) {
+        String response = authenicationService.authenticate(formData.getFirst("usr_username"), formData.getFirst("usr_password"));
 
         System.out.println("Token: " + response);
 
         if(!Objects.equals(response, "Error")) {
-            return "redirect:/auctions";
+            model.addAttribute("token", response);
+            return "login";
         } else {
+            model.addAttribute("token", null);
             model.addAttribute("error", "Invalid username or password");
             return "login";
         }
     }
 
-//    @GetMapping("/logout")
-//    public String logout() {
-//        SecurityContextHolder.getContext().setAuthentication(null);
-//        return "redirect:/";
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity logout() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

@@ -6,6 +6,7 @@ const ResetDataButton = (() => {
     let url='http://localhost:8080/api/reset-all-data';
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+    Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));
     Http.send();
 
     Http.onreadystatechange = (e) => {
@@ -29,3 +30,12 @@ if(enableResetBtn) {
 
     document.body.appendChild(resetBtn);
 }
+
+getCookie = ((cookieName) => {
+    let cookie = {};
+    document.cookie.split(';').forEach(function(el) {
+        let [key,value] = el.split('=');
+        cookie[key.trim()] = value;
+    })
+    return cookie[cookieName];
+});
