@@ -11,6 +11,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -84,11 +85,13 @@ public class AuctionService {
             Bid bestBid = bidRepo.findBestByAuction(auc_id);
 
             JSONObject auctionJSON = new JSONObject(auction);
-
             ItemBean itemBean = getItem(auction.getAuc_itm_id());
             auctionJSON.put("auc_itm_id", new JSONObject(itemBean));
             if(bestBid != null) {
-                auctionJSON.put("highest_bidder_usr_full_name", "Zach Ross"); //ToDo: Pass actual user full name
+                JSONObject userJSON = getUser(bestBid.getBid_usr_id());
+                String fullName = userJSON.getString("usr_first_name") + " " + userJSON.getString("usr_last_name");
+                auctionJSON.put("highest_bidder_usr_full_name", fullName);
+                auctionJSON.put("highest_bidder_usr_id", bestBid.getBid_usr_id());
             }
 
             return auctionJSON;
@@ -115,6 +118,19 @@ public class AuctionService {
 
     public Bid getAuctionBestBid(Integer auc_id) {
         return bidRepo.findBestByAuction(auc_id);
+    }
+
+    public String getAuctionBestBidUser(Integer auc_id) {
+        Bid bestBid = bidRepo.findBestByAuction(auc_id);
+
+        if(bestBid == null) {
+            return "This auction has no bids";
+        }
+
+        Integer usr_id = bestBid.getBid_usr_id();
+
+        JSONObject bestBidUser = getUser(usr_id);
+        return bestBidUser.toString();
     }
 
     public static record PostItem(
@@ -175,6 +191,22 @@ public class AuctionService {
 
     public void resetAuctionData() {
         auctionRepo.resetAuctionData();
+    }
+
+    public static record GetUser(
+            Integer usr_id
+    ) {}
+    private JSONObject getUser(Integer usr_id) {
+        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/get-user";
+
+        GetUser userPayload = new GetUser(usr_id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("userServer.apiKey"));
+        HttpEntity<GetUser> request = new HttpEntity<>(userPayload, headers);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return new JSONObject(response.getBody());
     }
 
 }

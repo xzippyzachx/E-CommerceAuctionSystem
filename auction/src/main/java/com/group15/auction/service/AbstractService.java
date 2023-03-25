@@ -23,7 +23,7 @@ public abstract class AbstractService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public abstract String createNewBid(Auction auc_id, Double bid_amount);
+    public abstract String createNewBid(Auction auc_id, Double bid_amount, Integer usr_id);
 
     public abstract void broadcastCurrentAuction(Auction auction);
 

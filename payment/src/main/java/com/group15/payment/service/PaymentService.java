@@ -6,11 +6,13 @@ import org.json.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Service
 public class PaymentService {
@@ -43,9 +45,11 @@ public class PaymentService {
             return "Pay amount should be " + total;
         }
 
+        JSONObject bestBidUser = getBestBidUser(auc_id);
+
         Payment payment = new Payment();
         payment.setPay_amount(total);
-        payment.setPay_usr_id(1);
+        payment.setPay_usr_id(bestBidUser.getInt("usr_id"));
         payment.setPay_card_number(pay_card_number);
         payment.setPay_person_name(pay_person_name);
         payment.setPay_expiry_date(pay_expiry_date);
@@ -59,7 +63,6 @@ public class PaymentService {
     }
 
     public String getPaymentReceipt(Integer auc_id) {
-        JSONObject payload = new JSONObject();
 
         JSONObject auction = getAuction(auc_id);
 
@@ -70,7 +73,9 @@ public class PaymentService {
         if(paymentrepository.findById(auction.getInt("auc_pay_id")).isPresent())
             payment = paymentrepository.findById(auction.getInt("auc_pay_id")).get();
 
-        //ToDO: Get user data
+        JSONObject payload = getUser(payment.getPay_usr_id());
+
+        System.out.println(payload);
 
         payload.put("pay_amount", payment.getPay_amount());
 
@@ -88,9 +93,12 @@ public class PaymentService {
         double itmExpeditedCost = auction.getJSONObject("auc_itm_id").getDouble("itm_expedited_cost");
 
         JSONObject cost = new JSONObject();
-        cost.put("auc_current_price", currentPrice);
-        cost.put("itm_shipping_cost", shippingCost);
-        cost.put("itm_expedited_cost", itmExpeditedCost);
+        if(Objects.equals(auction.getString("auc_state"), "complete")) {
+            cost = getBestBidUser(auc_id);
+            cost.put("auc_current_price", currentPrice);
+            cost.put("itm_shipping_cost", shippingCost);
+            cost.put("itm_expedited_cost", itmExpeditedCost);
+        }
 
         return cost;
     }
@@ -125,5 +133,37 @@ public class PaymentService {
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
         return response.getBody();
+    }
+
+    public static record GetUser(
+            Integer usr_id
+    ) {}
+    private JSONObject getUser(Integer usr_id) {
+        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/get-user";
+
+        GetUser userPayload = new GetUser(usr_id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("userServer.apiKey"));
+        HttpEntity<GetUser> request = new HttpEntity<>(userPayload, headers);
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return new JSONObject(response.getBody());
+    }
+
+    public static record GetBestBidUser(
+            Integer auc_id
+    ) {}
+    private JSONObject getBestBidUser(Integer usr_id) {
+        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-best-bid-user";
+
+        GetBestBidUser userPayload = new GetBestBidUser(usr_id);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("x-api-key", env.getProperty("userServer.apiKey"));
+        HttpEntity<GetBestBidUser> request = new HttpEntity<>(userPayload); //, headers
+
+        ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        return new JSONObject(response.getBody());
     }
 }

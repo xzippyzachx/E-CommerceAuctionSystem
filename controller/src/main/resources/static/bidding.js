@@ -26,6 +26,7 @@ client.connect({}, frame => {
         let state = data.auc_state;
         let type = data.auc_type;
         let highestBidder = data.highest_bidder_usr_full_name;
+        let highest_bidder_usr_id = data.highest_bidder_usr_id;
 
         currentPriceElement.innerHTML = "Current Price: $" + currentPrice.toFixed(2);
         if(highestBidder)
@@ -41,7 +42,7 @@ client.connect({}, frame => {
 
         } else if(state === "complete") {
             formElement.classList.add("hide");
-            if(highestBidder)
+            if(highestBidder && highest_bidder_usr_id === usr_id)
                 payBtn.classList.remove("hide");
             completeMessageElement.innerHTML = "Auction is complete!";
         } else if(state === "paid") {
@@ -60,6 +61,7 @@ const BidButton = (() => {
     let url = 'http://localhost:8080/api/new-bid';
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+    Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));
 
     let payload = {
         auc_id: auc_id,
@@ -90,3 +92,12 @@ window.onpopstate = function() {
     window.location.href = "http://localhost:8080/auctions"
 };
 history.pushState({}, '');
+
+getCookie = ((cookieName) => {
+    let cookie = {};
+    document.cookie.split(';').forEach(function(el) {
+        let [key,value] = el.split('=');
+        cookie[key.trim()] = value;
+    })
+    return cookie[cookieName];
+});

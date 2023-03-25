@@ -20,6 +20,9 @@ const UpdateAuctions = (() => {
                     case "complete":
                         window.location.href = `http://localhost:8080/payment?auc_id=${auc_id}`
                         break;
+                    case "expired":
+                        window.location.href = `http://localhost:8080/bidding?auc_id=${auc_id}`
+                        break;
                     case "paid":
                         window.location.href = `http://localhost:8080/receipt?auc_id=${auc_id}`
                         break;
@@ -35,6 +38,7 @@ const SearchAuctions = (() => {
     let url='http://localhost:8080/api/get-auctions-by-key';
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+    Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));
 
     let payload = {
         keyword: searchInput.value
@@ -71,13 +75,16 @@ const BuildAuctions = ((data) => {
     for (let a in data) {
         let auction = data[a];
 
-        let btnBame = "bid";
+        let btnBame = "Bid";
         switch (auction.auc_state) {
             case "running":
                 btnBame = "Bid";
                 break;
             case "complete":
                 btnBame = "Pay";
+                break;
+            case "expired":
+                btnBame = "View";
                 break;
             case "paid":
                 btnBame = "View";
@@ -109,4 +116,13 @@ const BuildAuctions = ((data) => {
     }
 
     UpdateAuctions();
+});
+
+getCookie = ((cookieName) => {
+    let cookie = {};
+    document.cookie.split(';').forEach(function(el) {
+        let [key,value] = el.split('=');
+        cookie[key.trim()] = value;
+    })
+    return cookie[cookieName];
 });

@@ -1,8 +1,10 @@
 package com.group15.controller.api;
 
+import com.group15.controller.service.AuthenicationService;
 import com.group15.controller.service.ControllerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -12,10 +14,12 @@ import java.util.Date;
 public class ProxyController {
 
     private final ControllerService controllerService;
+    private final AuthenicationService authenicationService;
 
     @Autowired
-    public ProxyController(ControllerService controllerService) {
+    public ProxyController(ControllerService controllerService, AuthenicationService authenicationService) {
         this.controllerService = controllerService;
+        this.authenicationService = authenicationService;
     }
 
     static record NewBidRequest(
@@ -23,9 +27,10 @@ public class ProxyController {
             Double bid_amount
     ) {}
     @PostMapping("new-bid")
-    public String newBid(@RequestBody NewBidRequest request) {
+    public String newBid(Authentication authentication, @RequestBody NewBidRequest request) {
+        Integer usr_id = authenicationService.getUserId(authentication.getName());
 
-        return controllerService.newBid(request.auc_id, request.bid_amount);
+        return controllerService.newBid(request.auc_id, request.bid_amount, usr_id);
     }
 
     static record GetAuctionsByKeyRequest(

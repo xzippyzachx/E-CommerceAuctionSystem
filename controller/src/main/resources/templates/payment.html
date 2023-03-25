@@ -21,18 +21,22 @@
         </div>
 
         <div th:if="${auc_id != null && auc_state == 'complete'}">
-            <div>
-                <h3>|Winner|</h3>
-                <p th:text="${'First Name: '}"></p>
-                <p th:text="${'Last Name: '}"></p>
-                <p th:text="${'Street: '}"></p>
-                <p th:text="${'Number: '}"></p>
-                <p th:text="${'Province: '}"></p>
-                <p th:text="${'Country: '}"></p>
-                <p th:text="${'Postal Code: '}"></p>
-            </div>
 
             <div>
+                <h3>|Winner|</h3>
+                <p th:text="${'First Name: ' + usr_first_name}"></p>
+                <p th:text="${'Last Name: ' + usr_last_name}"></p>
+                <span th:if="${usr_id == owner_usr_id}">
+                    <p th:text="${'Street: ' + usr_street_name}"></p>
+                    <p th:text="${'Number: ' + usr_street_number}"></p>
+                    <p th:text="${'City: ' + usr_city}"></p>
+                    <p th:text="${'Province: ' + usr_province}"></p>
+                    <p th:text="${'Country: ' + usr_country}"></p>
+                    <p th:text="${'Postal Code: ' + usr_postal_code}"></p>
+                </span>
+            </div>
+
+            <div th:if="${usr_id == owner_usr_id}">
                 <h3>|Cost|</h3>
                 <p th:text="${'Item Price: $' + auc_current_price}"></p>
                 <p th:text="${'Shippining Price: $' + itm_shipping_cost}"></p>
@@ -43,7 +47,7 @@
                 <p id="total-cost" th:text="${'Total Cost: $' + (auc_current_price + itm_shipping_cost)}"></p>
             </div>
 
-            <form id="card-form">
+            <form id="card-form" th:if="${usr_id == owner_usr_id}">
                 <h3>|Credit Card|</h3>
 
                 <div style="margin: 16px 0px">
@@ -81,5 +85,7 @@
         let itm_expedited_cost = [[${itm_expedited_cost}]];
     </script>
     <script th:src="@{/payment.js}" th:inline="javascript"></script>
+
+    <script th:src="@{/logout.js}"></script>
 
 </html>

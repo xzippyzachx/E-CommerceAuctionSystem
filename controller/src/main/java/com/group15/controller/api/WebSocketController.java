@@ -21,7 +21,8 @@ public class WebSocketController {
             Double auc_current_price,
             String auc_state,
             String auc_type,
-            String highest_bidder_usr_full_name
+            String highest_bidder_usr_full_name,
+            Integer highest_bidder_usr_id
     ) {}
     @PostMapping("auction-update")
     public void broadcastAuctionUpdate(@RequestBody SendAuctionUpdateRequest request) {
