@@ -1,0 +1,30 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/auctions
+    username: postgres
+    password: eecs4413
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    show_sql: false
+  main:
+    web-application-type: servlet
+
+controllerServer:
+  port: 8080
+
+itemServer:
+  port: 8082
+
+userServer:
+  port: 8081
+  apiKey: "iwSo3cLAwWlXzfCBsyRs9tQVU9LMPyy1ZNWceHWd1UoaNVqA65nPC0bK6nrQByC7BWDMOQrJb3ShQQxD4rTaypyJlkAJeTFFJwoTlepq4AcJtaZgBabPORrqRAIFdM9y"

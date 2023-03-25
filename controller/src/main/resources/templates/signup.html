@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+    <title>Signup</title>
+
+    </head>
+    <body>
+        <h1>Signup</h1>
+        <form th:action="@{/signup}" th:object="${user}" method="post">
+            <div>
+                <label for="usr_username">Username:</label>
+                <input type="text" id="usr_username" name="usr_username" th:field="*{usr_username}" required>
+            </div>
+
+            <div>
+                <label for="usr_first_name">First Name:</label>
+                <input type="text" id="usr_first_name" name="usr_first_name" th:field="*{usr_first_name}" required>
+            </div>
+
+            <div>
+                <label for="usr_last_name">Last Name:</label>
+                <input type="text" id="usr_last_name" name="usr_last_name" th:field="*{usr_last_name}" required>
+            </div>
+
+            <div>
+                <label for="usr_street_name">Street Name:</label>
+                <input type="text" id="usr_street_name" name="usr_street_name" th:field="*{usr_street_name}" required>
+            </div>
+
+            <div>
+                <label for="usr_street_number">Street Number:</label>
+                <input type="number" id="usr_street_number" name="usr_street_number" th:field="*{usr_street_number}" required>
+            </div>
+
+            <div>
+                <label for="usr_city">City:</label>
+                <input type="text" id="usr_city" name="usr_city" th:field="*{usr_city}" required>
+            </div>
+
+            <div>
+                <label for="usr_province">Province:</label>
+                <input type="text" id="usr_province" name="usr_province" th:field="*{usr_province}" required>
+            </div>
+
+            <div>
+                <label for="usr_country">Country:</label>
+                <input type="text" id="usr_country" name="usr_country" th:field="*{usr_country}" required>
+            </div>
+
+            <div>
+                <label for="usr_postal_code">Postal Code:</label>
+                <input type="text" id="usr_postal_code" name="usr_postal_code" th:field="*{usr_postal_code}" required>
+            </div>
+
+            <div>
+                <label for="usr_password">Password:</label>
+                <input type="password" id="usr_password" name="usr_password" th:field="*{usr_password}" minlength="8" required>
+            </div>
+
+            <button type="submit">Signup</button>
+        </form>
+        <a href="/login">Login</a>
+        <p th:text="${error}"></p>
+        <p th:text="${message}"></p>
+    </body>
+</html>

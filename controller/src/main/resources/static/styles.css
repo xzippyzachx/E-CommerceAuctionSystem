@@ -1,0 +1,16 @@
+
+.hide {
+    display: none;
+}
+
+.reset-btn {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+}
+
+.logout-btn {
+    position: fixed;
+    right: 70px;
+    top: 10px;
+}

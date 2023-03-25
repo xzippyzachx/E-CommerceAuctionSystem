@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8"/>
+        <title>Payment Page</title>
+    </head>
+    <body>
+        <h1>Payment Page</h1>
+
+        <div th:if="${auc_id == null}">
+            <p>Auction does not exist!</p>
+        </div>
+
+        <div th:if="${auc_id != null && auc_state == 'running'}">
+            <p>Auction is not complete!</p>
+        </div>
+
+        <div th:if="${auc_id != null && auc_state == 'paid'}">
+            <p>Auction is already paid!</p>
+        </div>
+
+        <div th:if="${auc_id != null && auc_state == 'complete'}">
+
+            <div>
+                <h3>|Winner|</h3>
+                <p th:text="${'First Name: ' + usr_first_name}"></p>
+                <p th:text="${'Last Name: ' + usr_last_name}"></p>
+                <span th:if="${usr_id == owner_usr_id}">
+                    <p th:text="${'Street: ' + usr_street_name}"></p>
+                    <p th:text="${'Number: ' + usr_street_number}"></p>
+                    <p th:text="${'City: ' + usr_city}"></p>
+                    <p th:text="${'Province: ' + usr_province}"></p>
+                    <p th:text="${'Country: ' + usr_country}"></p>
+                    <p th:text="${'Postal Code: ' + usr_postal_code}"></p>
+                </span>
+            </div>
+
+            <div th:if="${usr_id == owner_usr_id}">
+                <h3>|Cost|</h3>
+                <p th:text="${'Item Price: $' + auc_current_price}"></p>
+                <p th:text="${'Shippining Price: $' + itm_shipping_cost}"></p>
+                <label for="expedited-input">Expedited Shipping?</label>
+                <input id="expedited-input" type="checkbox"></input>
+                <p th:text="${'Add: $' + itm_expedited_cost}"></p>
+                <br>
+                <p id="total-cost" th:text="${'Total Cost: $' + (auc_current_price + itm_shipping_cost)}"></p>
+            </div>
+
+            <form id="card-form" th:if="${usr_id == owner_usr_id}">
+                <h3>|Credit Card|</h3>
+
+                <div style="margin: 16px 0px">
+                    <label for="card-number-input">Card Number</label>
+                    <input id="card-number-input" type="text" required minlength="16" maxlength="16" pattern="\d*"></input>
+                </div>
+
+                <div style="margin: 16px 0px">
+                    <label for="card-holder-name-input">Card Holder Name</label>
+                    <input id="card-holder-name-input" type="text" required></input>
+                </div>
+
+                <div style="margin: 16px 0px">
+                    <label for="card-expiry-input">Expiry Date</label>
+                    <input id="card-expiry-input" type="date" required></input>
+                </div>
+
+                <div style="margin: 16px 0px">
+                    <label for="card-code-input">Security Code</label>
+                    <input id="card-code-input" type="text" required minlength="3" maxlength="3" pattern="\d*"></input>
+                </div>
+
+                <button id="submit-button" type="button" onclick="SubmitButton()">Submit</button>
+
+            </form>
+
+        </div>
+
+    </body>
+
+    <script th:inline="javascript">
+        let auc_id = [[${auc_id}]];
+        let auc_current_price = [[${auc_current_price}]];
+        let itm_shipping_cost = [[${itm_shipping_cost}]];
+        let itm_expedited_cost = [[${itm_expedited_cost}]];
+    </script>
+    <script th:src="@{/payment.js}" th:inline="javascript"></script>
+
+    <script th:src="@{/logout.js}"></script>
+
+</html>

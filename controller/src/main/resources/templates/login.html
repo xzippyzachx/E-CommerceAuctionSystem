@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+    </head>
+    <body>
+        <h1>Login</h1>
+        <form action="/login" method="post">
+            <div>
+                <label for="usr_username">Username:</label>
+                <input type="text" id="usr_username" name="usr_username" required>
+            </div>
+            <div>
+                <label for="usr_password">Password:</label>
+                <input type="password" id="usr_password" name="usr_password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <a href="/signup">Sign up</a>
+        <p th:text="${error}"></p>
+
+    </body>
+
+    <script th:inline="javascript">
+        let token = [[${token}]];
+    </script>
+    <script th:src="@{/login.js}" th:inline="javascript"></script>
+</html>

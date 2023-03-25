@@ -1,0 +1,12 @@
+CREATE DATABASE users;
+
+CREATE OR REPLACE PROCEDURE user_data_reset()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	DELETE FROM users;
+	ALTER SEQUENCE usr_id_sequence RESTART WITH 1;
+
+	DELETE FROM addresses;
+	ALTER SEQUENCE adr_id_sequence RESTART WITH 1;
+END; $$;

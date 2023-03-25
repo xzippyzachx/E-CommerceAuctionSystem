@@ -1,0 +1,27 @@
+server:
+  port : 8084
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5435/payments
+    username: postgres
+    password: eecs4413
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    show_sql: true
+  main:
+    web-application-type: servlet
+
+auctionServer:
+  port: 8083
+
+userServer:
+  port: 8081
+  apiKey: "iwSo3cLAwWlXzfCBsyRs9tQVU9LMPyy1ZNWceHWd1UoaNVqA65nPC0bK6nrQByC7BWDMOQrJb3ShQQxD4rTaypyJlkAJeTFFJwoTlepq4AcJtaZgBabPORrqRAIFdM9y"
