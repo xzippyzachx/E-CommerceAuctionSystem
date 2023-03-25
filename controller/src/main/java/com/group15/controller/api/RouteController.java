@@ -153,7 +153,7 @@ public class RouteController {
         return "receipt";
     }
 
-    @GetMapping("/login")
+    @GetMapping({"/","/login"})
     public String showLoginPage() {
         return "login";
     }
