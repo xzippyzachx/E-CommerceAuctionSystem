@@ -75,8 +75,6 @@ public class PaymentService {
 
         JSONObject payload = getUser(payment.getPay_usr_id());
 
-        System.out.println(payload);
-
         payload.put("pay_amount", payment.getPay_amount());
 
         return payload.toString();
