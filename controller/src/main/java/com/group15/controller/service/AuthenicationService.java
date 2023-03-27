@@ -32,13 +32,8 @@ public class AuthenicationService {
     }
 
     public String authenticate(String username, String password) {
-
-        System.out.println(username + " " + password);
-
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (Exception e) {
             return "Error";
         }

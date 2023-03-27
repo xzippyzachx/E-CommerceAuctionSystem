@@ -24,10 +24,8 @@ public class PaymentService {
 
     public PaymentService(PaymentRepository paymentrepository, Environment env, RestTemplateBuilder restTemplateBuilder) {
         this.paymentrepository = paymentrepository;
-
         this.env = env;
         this.restTemplate = restTemplateBuilder.build();
-
     }
 
     public String createNewPayment(Integer auc_id, Double pay_amount, Long pay_card_number, String pay_person_name, Date pay_expiry_date, Integer pay_security_code, Boolean expedited_shipping) {
@@ -108,9 +106,10 @@ public class PaymentService {
     private JSONObject getAuction(Integer auc_id) {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
         PostAuc auctionPayload = new PostAuc(auc_id);
-
-        HttpEntity<PostAuc> request = new HttpEntity<>(auctionPayload);
+        HttpEntity<PostAuc> request = new HttpEntity<>(auctionPayload, headers);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
@@ -124,9 +123,10 @@ public class PaymentService {
     private String auctionPaid(Integer auc_id, Integer pay_id) {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/auction-paid";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
         PostAuctionPaid auctionPaidPayload = new PostAuctionPaid(auc_id, pay_id);
-
-        HttpEntity<PostAuctionPaid> request = new HttpEntity<>(auctionPaidPayload);
+        HttpEntity<PostAuctionPaid> request = new HttpEntity<>(auctionPaidPayload, headers);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
@@ -155,10 +155,10 @@ public class PaymentService {
     private JSONObject getBestBidUser(Integer usr_id) {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-best-bid-user";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
         GetBestBidUser userPayload = new GetBestBidUser(usr_id);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("x-api-key", env.getProperty("userServer.apiKey"));
-        HttpEntity<GetBestBidUser> request = new HttpEntity<>(userPayload); //, headers
+        HttpEntity<GetBestBidUser> request = new HttpEntity<>(userPayload, headers);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 

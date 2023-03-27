@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -38,7 +39,7 @@ public class JwtAthFilter extends OncePerRequestFilter {
 
         if(authHeader != null && authHeader.startsWith("Bearer")) {
             jwtToken = authHeader.substring(7);
-        } else if (cookie != null && cookie.getValue() != "") {
+        } else if (cookie != null && !Objects.equals(cookie.getValue(), "")) {
             jwtToken = cookie.getValue();
         } else {
             filterChain.doFilter(request, response);
