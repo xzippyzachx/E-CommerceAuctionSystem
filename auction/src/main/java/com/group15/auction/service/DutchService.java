@@ -69,6 +69,7 @@ public class DutchService extends AbstractService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("x-api-key", env.getProperty("controllerServer.apiKey"));
         HttpEntity<String> request = new HttpEntity<>(payload.toString(), headers);
 
         this.restTemplate.postForEntity(url, request , null);
@@ -157,6 +158,10 @@ public class DutchService extends AbstractService {
         System.out.println("Ending dutch auction AuctionId: " + auc_id + " [" + new Date().toInstant().toString() + "]");
 
         Auction auction = auctionRepo.findById(auc_id).get();
+
+        if(!auction.getAuc_state().equals("running")) {
+            return;
+        }
 
         auction.setAuc_state("expired");
 

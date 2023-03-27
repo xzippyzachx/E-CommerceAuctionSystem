@@ -70,6 +70,7 @@ public class ForwardService extends AbstractService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("x-api-key", env.getProperty("controllerServer.apiKey"));
         HttpEntity<String> request = new HttpEntity<>(payload.toString(), headers);
 
         this.restTemplate.postForEntity(url, request, null); //ToDO: Try catch
@@ -99,26 +100,31 @@ public class ForwardService extends AbstractService {
                 TimerTask tt = new TimerTask() {
                     @Override
                     public void run() {
-                        ExpireAuction(auction.getAuc_id());
+                        EndAuction(auction.getAuc_id());
                     };
                 };
                 timer.schedule(tt,((ForwardAuction)auction).getFwd_end_time());
                 timers.add(timer);
                 System.out.println("Scheduling AuctionId: " + auction.getAuc_id() + " for Date: " + ((ForwardAuction)auction).getFwd_end_time().toInstant().toString());
 
-            } else if (((ForwardAuction) auction).getAuc_state().equals("running")) {
+            } else if (auction.getAuc_state().equals("running")) {
                 System.out.println("AuctionId: " + auction.getAuc_id() + " End Time: " + ((ForwardAuction) auction).getFwd_end_time().toInstant().toString());
-                ExpireAuction(auction.getAuc_id());
+                EndAuction(auction.getAuc_id());
             }
         }
     }
 
-    private void ExpireAuction(Integer auc_id) {
+    private void EndAuction(Integer auc_id) {
         System.out.println("Ending forward auction AuctionId: " + auc_id + " [" + new Date().toInstant().toString() + "]");
 
         Auction auction = auctionRepo.findById(auc_id).get();
 
-        auction.setAuc_state("expired");
+        Bid bestBid = bidRepo.findBestByAuction(auction.getAuc_id());
+        if(bestBid != null) {
+            auction.setAuc_state("complete");
+        } else {
+            auction.setAuc_state("expired");
+        }
 
         auctionRepo.save(auction);
 

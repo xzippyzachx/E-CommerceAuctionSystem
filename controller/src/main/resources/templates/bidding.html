@@ -26,12 +26,12 @@
                 <p th:if="${auc_type != 'dutch'}">Time Left: <span id="auction-countdown" th:text="${fwd_end_time}"></span></p>
 
                 <form id="bid-form" th:classappend="${auc_state != 'running' ? 'hide' : ''}">
-                    <label for="bid-amount">Amount</label>
+                    <label for="bid-amount" th:classappend="${auc_type == 'dutch' ? 'hide' : ''}">Amount</label>
                     <input id="bid-amount" type="number" th:classappend="${auc_type == 'dutch' ? 'hide' : ''}" th:value="${auc_type == 'dutch' ? auc_current_price : auc_current_price + 10}"></input>
                     <button id="bid-button" type="button" onclick="BidButton()" th:text="${auc_type == 'forward' ? 'Bid' : 'Buy'}"></button>
                 </form>
 
-                <p id="bid-message" th:text="${auc_state != 'running' ? 'Auction is complete!' : ''}"></p>
+                <p id="bid-message" th:text="${auc_state == 'complete' ? 'Auction is complete!' : (auc_state == 'expired' ? 'Auction has expired!' : '')}"></p>
 
                 <button id="pay-button" type="button" onclick="PayButton()" th:classappend="${auc_state != 'complete' || highest_bidder_usr_full_name == null || highest_bidder_usr_id != usr_id ? 'hide' : ''}">Pay</button>
             </div>

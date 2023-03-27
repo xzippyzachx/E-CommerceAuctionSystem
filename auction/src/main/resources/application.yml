@@ -22,6 +22,7 @@ spring:
 
 controllerServer:
   port: 8080
+  apiKey: "O8bsJhrjp8LIkSXMl7f5ymD8id0eJzJQ1LFFS5dfHds1rdjkm9Zn3uGEeCQs6B4YB2KUjfbcWL8ImQfxyQOBZDtrFhYOX4EtG20bNiBHzh130AuxOYjnMwEHkDBrTZaP"
 
 itemServer:
   port: 8082
