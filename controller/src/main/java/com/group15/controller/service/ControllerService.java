@@ -8,12 +8,14 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class ControllerService {
@@ -32,8 +34,10 @@ public class ControllerService {
     public JSONObject getAuction(Integer auc_id) {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
         GetAuction auctionPayload = new GetAuction(auc_id);
-        HttpEntity<GetAuction> request = new HttpEntity<>(auctionPayload);
+        HttpEntity<GetAuction> request = new HttpEntity<>(auctionPayload, headers);
 
         ResponseEntity<String> auctionResponse = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
@@ -43,7 +47,10 @@ public class ControllerService {
     public JSONArray getAllAuctions() {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-all-auctions";
 
-        ResponseEntity<String> response = this.restTemplate.getForEntity(url, String.class); //ToDO: Try catch
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
+        HttpEntity<GetAuction> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class); //ToDO: Try catch
 
         return new JSONArray(response.getBody());
     }
@@ -54,8 +61,10 @@ public class ControllerService {
     public JSONArray getAuctionsByKey(String keyword) {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auctions-by-key";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
         PostAuctionByKey auctionPayload = new PostAuctionByKey(keyword);
-        HttpEntity<PostAuctionByKey> request = new HttpEntity<>(auctionPayload);
+        HttpEntity<PostAuctionByKey> request = new HttpEntity<>(auctionPayload, headers);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
@@ -70,8 +79,10 @@ public class ControllerService {
     public String newBid(Integer auc_id, Double bid_amount, Integer usr_id) {
         String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/new-bid";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
         PostBid bidPayload = new PostBid(auc_id, bid_amount, usr_id);
-        HttpEntity<PostBid> request = new HttpEntity<>(bidPayload);
+        HttpEntity<PostBid> request = new HttpEntity<>(bidPayload, headers);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
@@ -84,8 +95,10 @@ public class ControllerService {
     public JSONObject getCost(Integer auc_id) {
         String url = "http://localhost:" + env.getProperty("paymentServer.port") + "/api/payments/get-cost";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("paymentServer.apiKey"));
         GetCost costPayload = new GetCost(auc_id);
-        HttpEntity<GetCost> request = new HttpEntity<>(costPayload);
+        HttpEntity<GetCost> request = new HttpEntity<>(costPayload, headers);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
@@ -95,7 +108,9 @@ public class ControllerService {
     public String newPayment(ProxyController.NewPaymentRequest payload) {
         String url = "http://localhost:" + env.getProperty("paymentServer.port") + "/api/payments/new-payment";
 
-        HttpEntity<ProxyController.NewPaymentRequest> request = new HttpEntity<>(payload);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("paymentServer.apiKey"));
+        HttpEntity<ProxyController.NewPaymentRequest> request = new HttpEntity<>(payload, headers);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
 
@@ -108,10 +123,15 @@ public class ControllerService {
     public JSONObject getReceipt(Integer auc_id) {
         String url = "http://localhost:" + env.getProperty("paymentServer.port") + "/api/payments/get-receipt";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("paymentServer.apiKey"));
         GetReceipt receiptPayload = new GetReceipt(auc_id);
-        HttpEntity<GetReceipt> request = new HttpEntity<>(receiptPayload);
+        HttpEntity<GetReceipt> request = new HttpEntity<>(receiptPayload, headers);
 
         ResponseEntity<String> response = this.restTemplate.postForEntity(url, request, String.class); //ToDO: Try catch
+
+        if(Objects.equals(response.getBody(), "This auction is not paid"))
+            return null;
 
         return new JSONObject(response.getBody());
     }
@@ -152,9 +172,21 @@ public class ControllerService {
         String itemUrl = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/reset-item-data";
         String paymentUrl = "http://localhost:" + env.getProperty("paymentServer.port") + "/api/payments/reset-payment-data";
 
-        this.restTemplate.postForEntity(auctionUrl, null, String.class); //ToDO: Try catch
-        this.restTemplate.postForEntity(itemUrl, null, String.class);
-        this.restTemplate.postForEntity(paymentUrl, null, String.class);
+        HttpHeaders auctionHeaders = new HttpHeaders();
+        auctionHeaders.add("x-api-key", env.getProperty("auctionServer.apiKey"));
+        HttpEntity<PostBid> auctionRequest = new HttpEntity<>(auctionHeaders);
+
+        HttpHeaders itemHeaders = new HttpHeaders();
+        itemHeaders.add("x-api-key", env.getProperty("itemServer.apiKey"));
+        HttpEntity<PostBid> itemRequest = new HttpEntity<>(itemHeaders);
+
+        HttpHeaders paymentHeaders = new HttpHeaders();
+        paymentHeaders.add("x-api-key", env.getProperty("paymentServer.apiKey"));
+        HttpEntity<PostBid> paymentRequest = new HttpEntity<>(paymentHeaders);
+
+        this.restTemplate.postForEntity(auctionUrl, auctionRequest, String.class); //ToDO: Try catch
+        this.restTemplate.postForEntity(itemUrl, itemRequest, String.class);
+        this.restTemplate.postForEntity(paymentUrl, paymentRequest, String.class);
 
         return "Data reset";
     }

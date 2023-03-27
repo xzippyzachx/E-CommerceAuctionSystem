@@ -8,14 +8,8 @@ const LogoutButton = (() => {
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
     Http.send();
 
-    Http.onreadystatechange = (e) => {
-        if(Http.readyState === XMLHttpRequest.DONE) {
-            if(Http.responseText) {
-               document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                window.location.href = `http://localhost:8080/login`
-            }
-        }
-    }
+    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.href = `http://localhost:8080/login`;
 });
 
 if(enableLogoutBtn) {

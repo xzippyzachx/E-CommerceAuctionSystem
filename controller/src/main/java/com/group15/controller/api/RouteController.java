@@ -91,7 +91,7 @@ public class RouteController {
             model.addAttribute("auc_current_price", auction.getDouble("auc_current_price"));
             model.addAttribute("auc_state", auction.getString("auc_state"));
             model.addAttribute("auc_type", auction.getString("auc_type"));
-            if(auction.getString("auc_type") == "forward")
+            if(Objects.equals(auction.getString("auc_type"), "forward"))
                 model.addAttribute("fwd_end_time", auction.getString("fwd_end_time"));
             if(auction.has("highest_bidder_usr_full_name"))
                 model.addAttribute("highest_bidder_usr_full_name", auction.getString("highest_bidder_usr_full_name"));
@@ -136,6 +136,9 @@ public class RouteController {
     public String receipt(Authentication authentication, Model model, @RequestParam(name = "auc_id") Integer auc_id) {
         JSONObject receipt = controllerService.getReceipt(auc_id);
 
+        if(receipt == null)
+            return "receipt";
+
         model.addAttribute("pay_amount", receipt.getDouble("pay_amount"));
 
         model.addAttribute("owner_usr_id", receipt.getInt("usr_id"));
@@ -151,11 +154,6 @@ public class RouteController {
         model.addAttribute("usr_id", authenicationService.getUserId(authentication.getName()));
 
         return "receipt";
-    }
-
-    @GetMapping({"/","/login"})
-    public String showLoginPage() {
-        return "login";
     }
 
     @GetMapping("/signup")
@@ -181,11 +179,14 @@ public class RouteController {
         return "redirect:/login";
     }
 
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login";
+    }
+
     @PostMapping("/login")
     public String login(@RequestBody MultiValueMap<String, String> formData, Model model) {
         String response = authenicationService.authenticate(formData.getFirst("usr_username"), formData.getFirst("usr_password"));
-
-        System.out.println("Token: " + response);
 
         if(!Objects.equals(response, "Error")) {
             model.addAttribute("token", response);

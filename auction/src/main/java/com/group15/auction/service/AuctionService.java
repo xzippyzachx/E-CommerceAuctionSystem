@@ -139,8 +139,10 @@ public class AuctionService {
     private ItemBean getItem(Integer itm_id) {
         String url = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/get-item";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("itemServer.apiKey"));
         PostItem itemPayload = new PostItem(itm_id);
-        HttpEntity<PostItem> request = new HttpEntity<>(itemPayload);
+        HttpEntity<PostItem> request = new HttpEntity<>(itemPayload, headers);
 
         ResponseEntity<ItemBean> response = this.restTemplate.postForEntity(url, request, ItemBean.class); //ToDO: Try catch
 
@@ -153,8 +155,10 @@ public class AuctionService {
     private List<ItemBean> getItemsByIds(Integer[] itm_ids) {
         String url = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/get-items-by-ids";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("itemServer.apiKey"));
         PostItems itemsPayload = new PostItems(itm_ids);
-        HttpEntity<PostItems> request = new HttpEntity<>(itemsPayload);
+        HttpEntity<PostItems> request = new HttpEntity<>(itemsPayload, headers);
 
         ResponseEntity<ItemBean[]> response = this.restTemplate.postForEntity(url, request, ItemBean[].class); //ToDO: Try catch
 
@@ -167,8 +171,10 @@ public class AuctionService {
     private List<ItemBean> getItemsByKey(String keyword) {
         String url = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/get-items-by-key";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-api-key", env.getProperty("itemServer.apiKey"));
         PostItemsKey itemsPayload = new PostItemsKey(keyword);
-        HttpEntity<PostItemsKey> request = new HttpEntity<>(itemsPayload);
+        HttpEntity<PostItemsKey> request = new HttpEntity<>(itemsPayload, headers);
 
         ResponseEntity<ItemBean[]> response = this.restTemplate.postForEntity(url, request, ItemBean[].class); //ToDO: Try catch
 

@@ -1,5 +1,6 @@
 server:
   port: 8083
+  apiKey: "V6ZQnmzX5o7tDv5h6PGp9dvaxEbaRxIv3SZHaaCrbXT90hg7ftGrTKjRv1RncS1kr9s9QHeqP6Iupy4dMtnjdRSkZa4cw6ZwDIwN7ZYe2Yyr6KIRaRMXDWT8BSsD9BoH"
 
 spring:
   datasource:
@@ -24,6 +25,7 @@ controllerServer:
 
 itemServer:
   port: 8082
+  apiKey: "8obdVwEBLtNaht6mJrjC54wik1jAHdFLeCoP8yGlho7N9pdQpld2C5KfSt7pvMMyDPHHvTSJBJXEVQ8GD5n2nCvdyP0k39PdzgwB3QcD91j3J3Bf242nEIlzW9SNUtOu"
 
 userServer:
   port: 8081

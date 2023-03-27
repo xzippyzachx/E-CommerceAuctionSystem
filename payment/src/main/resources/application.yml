@@ -1,5 +1,6 @@
 server:
   port : 8084
+  apiKey: "Nn0NFACZliR6aDRROAZAVolhFg4XaP5P27cD4IIkENtRIrVtdUW4HpHFW8pJn0cM88pPdVDaF45xNgTBbheHMiKexFHibwgQTLYLp5MjVQMCqk76PCPmo8d44EKF4VT1"
 
 spring:
   datasource:
@@ -21,6 +22,7 @@ spring:
 
 auctionServer:
   port: 8083
+  apiKey: "V6ZQnmzX5o7tDv5h6PGp9dvaxEbaRxIv3SZHaaCrbXT90hg7ftGrTKjRv1RncS1kr9s9QHeqP6Iupy4dMtnjdRSkZa4cw6ZwDIwN7ZYe2Yyr6KIRaRMXDWT8BSsD9BoH"
 
 userServer:
   port: 8081
