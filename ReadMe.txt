@@ -1,4 +1,5 @@
 Github: https://github.com/xzippyzachx/E-CommerceAuctionSystem
+Entry URL: http://localhost:8080/login
 
 Follow these instructions to setup and run the E-Commerce Auction System
 
@@ -23,4 +24,4 @@ docker run --name postgres_payments -d -p 5435:5432 xzippyzachx/postgres_payment
 
 |Running The Servers|
 Step 1 - Import the E-CommerceAuctionSystem.zip into your IDE (Intellij, Eclipse)
-Step 2 - Run each server as a maven spring project
+Step 2 - Run each server as a maven spring project (There are 5 servers)
