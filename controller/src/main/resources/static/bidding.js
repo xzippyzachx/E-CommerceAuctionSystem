@@ -45,6 +45,10 @@ client.connect({}, frame => {
             if(highestBidder && highest_bidder_usr_id === usr_id)
                 payBtn.classList.remove("hide");
             completeMessageElement.innerHTML = "Auction is complete!";
+        } else if(state === "expired") {
+            formElement.classList.add("hide");
+            payBtn.classList.add("hide");
+            completeMessageElement.innerHTML = "Auction has expired!";
         } else if(state === "paid") {
             formElement.classList.add("hide");
             payBtn.classList.add("hide");

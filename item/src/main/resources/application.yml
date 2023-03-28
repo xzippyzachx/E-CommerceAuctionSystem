@@ -1,5 +1,6 @@
 server:
   port : 8082
+  apiKey: "8obdVwEBLtNaht6mJrjC54wik1jAHdFLeCoP8yGlho7N9pdQpld2C5KfSt7pvMMyDPHHvTSJBJXEVQ8GD5n2nCvdyP0k39PdzgwB3QcD91j3J3Bf242nEIlzW9SNUtOu"
 
 spring:
   datasource:
