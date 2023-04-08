@@ -35,6 +35,7 @@ public class AuthenicationService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "Error";
         }
 
@@ -51,7 +52,7 @@ public class AuthenicationService {
             String usr_username
     ) {}
     public Integer getUserId(String usr_username) {
-        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/get-user-id";
+        String url = env.getProperty("userServer.url") + ":" + env.getProperty("userServer.port") + "/api/users/get-user-id";
 
         GetUserId userPayload = new GetUserId(usr_username);
         HttpHeaders headers = new HttpHeaders();

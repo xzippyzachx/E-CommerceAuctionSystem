@@ -1,5 +1,5 @@
-// Try to set up WebSocket connection with the handshake at "http://localhost:8080/stomp"
-let sock = new SockJS("http://localhost:8080/stomp");
+// Try to set up WebSocket connection
+let sock = new SockJS(`${window.location.protocol}//${window.location.host}/stomp`);
 
 // Create a new StompClient object with the WebSocket endpoint
 let client = Stomp.over(sock);
@@ -62,7 +62,7 @@ client.connect({}, frame => {
 
 const BidButton = (() => {
     let Http = new XMLHttpRequest();
-    let url = 'http://localhost:8080/api/new-bid';
+    let url = `${window.location.protocol}//${window.location.host}/api/new-bid`;
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
     Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));
@@ -89,11 +89,11 @@ bidAmountElement.addEventListener('keypress', (event) => {
 });
 
 const PayButton = (() => {
-    window.location.href = `http://localhost:8080/payment?auc_id=${auc_id}`
+    window.location.href = `${window.location.protocol}//${window.location.host}/payment?auc_id=${auc_id}`
 });
 
 window.onpopstate = function() {
-    window.location.href = "http://localhost:8080/auctions"
+    window.location.href = `${window.location.protocol}//${window.location.host}/auctions`
 };
 history.pushState({}, '');
 
