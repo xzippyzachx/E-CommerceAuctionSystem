@@ -27,7 +27,7 @@ const SubmitButton = (() => {
         return;
 
     let Http = new XMLHttpRequest();
-    let url = 'http://localhost:8080/api/new-payment';
+    let url = `${window.location.protocol}//${window.location.host}/api/new-payment`;
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
     Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));
@@ -46,7 +46,7 @@ const SubmitButton = (() => {
     Http.onreadystatechange = (e) => {
         if(Http.readyState === XMLHttpRequest.DONE) {
             if(Http.responseText) {
-                window.location.href = `http://localhost:8080/receipt?auc_id=${auc_id}`
+                window.location.href = `${window.location.protocol}//${window.location.host}/receipt?auc_id=${auc_id}`
             }
         }
     }

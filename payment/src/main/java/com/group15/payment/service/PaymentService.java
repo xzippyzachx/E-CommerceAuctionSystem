@@ -104,7 +104,7 @@ public class PaymentService {
     }
 
     private JSONObject getAuction(Integer auc_id) {
-        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
+        String url = env.getProperty("auctionServer.url") + ":" + env.getProperty("auctionServer.port") + "/api/auctions/get-auction";
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
@@ -121,7 +121,7 @@ public class PaymentService {
             Integer pay_id
     ) {}
     private String auctionPaid(Integer auc_id, Integer pay_id) {
-        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/auction-paid";
+        String url = env.getProperty("auctionServer.url") + ":" + env.getProperty("auctionServer.port") + "/api/auctions/auction-paid";
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));
@@ -137,7 +137,7 @@ public class PaymentService {
             Integer usr_id
     ) {}
     private JSONObject getUser(Integer usr_id) {
-        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/get-user";
+        String url = env.getProperty("userServer.url") + ":" + env.getProperty("userServer.port") + "/api/users/get-user";
 
         GetUser userPayload = new GetUser(usr_id);
         HttpHeaders headers = new HttpHeaders();
@@ -153,7 +153,7 @@ public class PaymentService {
             Integer auc_id
     ) {}
     private JSONObject getBestBidUser(Integer usr_id) {
-        String url = "http://localhost:" + env.getProperty("auctionServer.port") + "/api/auctions/get-best-bid-user";
+        String url = env.getProperty("auctionServer.url") + ":" + env.getProperty("auctionServer.port") + "/api/auctions/get-best-bid-user";
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-api-key", env.getProperty("auctionServer.apiKey"));

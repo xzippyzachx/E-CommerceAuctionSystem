@@ -1,5 +1,5 @@
 const CountDown = ((date, element) => {
-    let countDownDate = new Date(date).getTime();
+    let countDownDate = new Date(date + ' UTC').getTime();
     element.innerHTML = "";
 
     // Update the countdown every 1 second

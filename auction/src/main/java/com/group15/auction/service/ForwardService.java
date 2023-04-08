@@ -57,7 +57,7 @@ public class ForwardService extends AbstractService {
 
     @Override
     public void broadcastCurrentAuction(Auction auction) {
-        String url = "http://localhost:" + env.getProperty("controllerServer.port") + "/api/broadcast/auction-update";
+        String url = env.getProperty("controllerServer.url") + ":" + env.getProperty("controllerServer.port") + "/api/broadcast/auction-update";
         JSONObject payload = new JSONObject(auction);
 
         Bid bestBid = bidRepo.findBestByAuction(auction.getAuc_id());
@@ -135,7 +135,7 @@ public class ForwardService extends AbstractService {
             Integer usr_id
     ) {}
     private JSONObject getUser(Integer usr_id) {
-        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/get-user";
+        String url = env.getProperty("userServer.url") + ":" + env.getProperty("userServer.port") + "/api/users/get-user";
 
         AuctionService.GetUser userPayload = new AuctionService.GetUser(usr_id);
         HttpHeaders headers = new HttpHeaders();
