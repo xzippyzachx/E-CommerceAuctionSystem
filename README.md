@@ -1,11 +1,18 @@
-# Follow these instructions to setup and run the E-Commerce Auction System
+## Follow these instructions to setup and run the E-Commerce Auction System
 
+### Using Docker Compose
 
-## PostgresSQL Database Setup
+* Step 1 - Ensure Docker Desktop is installed on your machine and running
+* Step 2 - Unzip the `E-CommerceAuctionSystem.zip`
+* Step 3 - Run the following command in the project root (Location of `docker-compose.yml`)
 
-* Step 1 - Ensure Docker Desktop is installed on your machine
+```bash
+docker-compose up
+```
 
+### Manual PostgresSQL Database Setup
 
+* Step 1 - Ensure Docker Desktop is installed on your machine and running
 * Step 2 - Run these commands to pull the postgresql database docker images:
 
 ```bash
@@ -31,18 +38,15 @@ docker run --name postgres_auctions -d -p 5434:5432 xzippyzachx/postgres_auction
 docker run --name postgres_payments -d -p 5435:5432 xzippyzachx/postgres_payments
 ```
 
-## Running The Servers
+### Manually Running The Servers via an IDE
 
-* Step 1 - Import the E-CommerceAuctionSystem.zip into your IDE (Intellij, Eclipse)
-
+* Step 1 - Import the `E-CommerceAuctionSystem.zip` into your IDE (Intellij, Eclipse)
 * Step 2 - Run each server as a maven spring project (There are 5 servers)
 
 
-## Entry URL:
-
+### Entry URL:
 http://localhost:8080/login
 
 
-## Github Link:
-
+### Github Link:
 [Github](https://github.com/xzippyzachx/E-CommerceAuctionSystem)
