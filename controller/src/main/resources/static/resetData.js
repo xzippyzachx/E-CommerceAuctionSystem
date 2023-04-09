@@ -3,7 +3,7 @@ let enableResetBtn = true;
 
 const ResetDataButton = (() => {
     let Http = new XMLHttpRequest();
-    let url='http://localhost:8080/api/reset-all-data';
+    let url=`${window.location.protocol}//${window.location.host}/api/reset-all-data`;
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
     Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));

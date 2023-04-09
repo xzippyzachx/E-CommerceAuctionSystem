@@ -6,5 +6,5 @@ if(token != null)
     expires.setTime(expireTime);
     document.cookie=`access_token=${token};expires='${expires.toUTCString()}';`;
 
-    window.location.href = `http://localhost:8080/auctions`
+    window.location.href = `${window.location.protocol}//${window.location.host}/auctions`
 }

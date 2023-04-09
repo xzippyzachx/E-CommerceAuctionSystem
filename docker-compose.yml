@@ -1,0 +1,102 @@
+version: '3.7'
+services:
+  controller-server:
+    container_name: controller_server
+    image: xzippyzachx/spring_controller:latest
+    environment:
+      - USERSERVER_URL=http://user-server
+      - ITEMSERVER_URL=http://item-server
+      - AUCTIONSERVER_URL=http://auction-server
+      - PAYMENTSERVER_URL=http://payment-server
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-cloud-network
+  user-server:
+    container_name: user_server
+    image: xzippyzachx/spring_user:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-postgres:5432/users
+    ports:
+      - "8081:8081"
+    depends_on:
+      - user-postgres
+    links:
+      - user-postgres
+    networks:
+      - spring-cloud-network
+  user-postgres:
+    container_name: postgres_users
+    image: xzippyzachx/postgres_users:latest
+    ports:
+      - "5432:5432"
+    networks:
+      - spring-cloud-network
+  item-server:
+    container_name: item_server
+    image: xzippyzachx/spring_item:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://item-postgres:5432/items
+    ports:
+      - "8082:8082"
+    depends_on:
+      - item-postgres
+    links:
+      - item-postgres
+    networks:
+      - spring-cloud-network
+  item-postgres:
+    container_name: postgres_items
+    image: xzippyzachx/postgres_items:latest
+    ports:
+      - "5433:5432"
+    networks:
+      - spring-cloud-network
+  auction-server:
+    container_name: auction_server
+    image: xzippyzachx/spring_auction:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://auction-postgres:5432/auctions
+      - CONTROLLERSERVER_URL=http://controller-server
+      - ITEMSERVER_URL=http://item-server
+      - USERSERVER_URL=http://user-server
+    ports:
+      - "8083:8083"
+    depends_on:
+      - auction-postgres
+    links:
+      - auction-postgres
+    networks:
+      - spring-cloud-network
+  auction-postgres:
+    container_name: postgres_auctions
+    image: xzippyzachx/postgres_auctions:latest
+    ports:
+      - "5434:5432"
+    networks:
+      - spring-cloud-network
+  payment-server:
+    container_name: payment_server
+    image: xzippyzachx/spring_payment:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://payment-postgres:5432/payments
+      - AUCTIONSERVER_URL=http://auction-server
+      - USERSERVER_URL=http://user-server
+    ports:
+      - "8084:8084"
+    depends_on:
+      - payment-postgres
+    links:
+      - payment-postgres
+    networks:
+      - spring-cloud-network
+  payment-postgres:
+    container_name: postgres_payments
+    image: xzippyzachx/postgres_payments:latest
+    ports:
+      - "5435:5432"
+    networks:
+      - spring-cloud-network
+networks:
+  spring-cloud-network:
+    driver: bridge

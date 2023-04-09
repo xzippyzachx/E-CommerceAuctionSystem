@@ -15,16 +15,16 @@ const UpdateAuctions = (() => {
             buttonChild.addEventListener("click", () => {
                 switch (buttonChild.value) {
                     case "running":
-                        window.location.href = `http://localhost:8080/bidding?auc_id=${auc_id}`
+                        window.location.href = `${window.location.protocol}//${window.location.host}/bidding?auc_id=${auc_id}`
                         break;
                     case "complete":
-                        window.location.href = `http://localhost:8080/payment?auc_id=${auc_id}`
+                        window.location.href = `${window.location.protocol}//${window.location.host}/payment?auc_id=${auc_id}`
                         break;
                     case "expired":
-                        window.location.href = `http://localhost:8080/bidding?auc_id=${auc_id}`
+                        window.location.href = `${window.location.protocol}//${window.location.host}/bidding?auc_id=${auc_id}`
                         break;
                     case "paid":
-                        window.location.href = `http://localhost:8080/receipt?auc_id=${auc_id}`
+                        window.location.href = `${window.location.protocol}//${window.location.host}/receipt?auc_id=${auc_id}`
                         break;
                 }
             })
@@ -35,7 +35,7 @@ UpdateAuctions();
 
 const SearchAuctions = (() => {
     let Http = new XMLHttpRequest();
-    let url='http://localhost:8080/api/get-auctions-by-key';
+    let url=`${window.location.protocol}//${window.location.host}/api/get-auctions-by-key`;
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
     Http.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_token"));
