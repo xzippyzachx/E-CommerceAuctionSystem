@@ -3,13 +3,13 @@ let enableLogoutBtn = true;
 
 const LogoutButton = (() => {
     let Http = new XMLHttpRequest();
-    let url='http://localhost:8080/logout';
+    let url=`${window.location.protocol}//${window.location.host}/logout`;
     Http.open("POST", url);
     Http.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
     Http.send();
 
     document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location.href = `http://localhost:8080/login`;
+    window.location.href = `${window.location.protocol}//${window.location.host}/login`;
 });
 
 if(enableLogoutBtn) {

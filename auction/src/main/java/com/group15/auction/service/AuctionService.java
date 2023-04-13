@@ -137,7 +137,7 @@ public class AuctionService {
             Integer itm_id
     ) {}
     private ItemBean getItem(Integer itm_id) {
-        String url = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/get-item";
+        String url = env.getProperty("itemServer.url") + ":" + env.getProperty("itemServer.port") + "/api/items/get-item";
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-api-key", env.getProperty("itemServer.apiKey"));
@@ -153,7 +153,7 @@ public class AuctionService {
             Integer[] itm_ids
     ) {}
     private List<ItemBean> getItemsByIds(Integer[] itm_ids) {
-        String url = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/get-items-by-ids";
+        String url = env.getProperty("itemServer.url") + ":" + env.getProperty("itemServer.port") + "/api/items/get-items-by-ids";
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-api-key", env.getProperty("itemServer.apiKey"));
@@ -169,7 +169,7 @@ public class AuctionService {
             String keyword
     ) {}
     private List<ItemBean> getItemsByKey(String keyword) {
-        String url = "http://localhost:" + env.getProperty("itemServer.port") + "/api/items/get-items-by-key";
+        String url = env.getProperty("itemServer.url") + ":" + env.getProperty("itemServer.port") + "/api/items/get-items-by-key";
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-api-key", env.getProperty("itemServer.apiKey"));
@@ -203,7 +203,7 @@ public class AuctionService {
             Integer usr_id
     ) {}
     private JSONObject getUser(Integer usr_id) {
-        String url = "http://localhost:" + env.getProperty("userServer.port") + "/api/users/get-user";
+        String url = env.getProperty("userServer.url") + ":" + env.getProperty("userServer.port") + "/api/users/get-user";
 
         GetUser userPayload = new GetUser(usr_id);
         HttpHeaders headers = new HttpHeaders();

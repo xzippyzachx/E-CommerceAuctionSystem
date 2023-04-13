@@ -21,13 +21,16 @@ spring:
     web-application-type: servlet
 
 controllerServer:
+  url: "http://localhost"
   port: 8080
   apiKey: "O8bsJhrjp8LIkSXMl7f5ymD8id0eJzJQ1LFFS5dfHds1rdjkm9Zn3uGEeCQs6B4YB2KUjfbcWL8ImQfxyQOBZDtrFhYOX4EtG20bNiBHzh130AuxOYjnMwEHkDBrTZaP"
 
 itemServer:
+  url: "http://localhost"
   port: 8082
   apiKey: "8obdVwEBLtNaht6mJrjC54wik1jAHdFLeCoP8yGlho7N9pdQpld2C5KfSt7pvMMyDPHHvTSJBJXEVQ8GD5n2nCvdyP0k39PdzgwB3QcD91j3J3Bf242nEIlzW9SNUtOu"
 
 userServer:
+  url: "http://localhost"
   port: 8081
   apiKey: "iwSo3cLAwWlXzfCBsyRs9tQVU9LMPyy1ZNWceHWd1UoaNVqA65nPC0bK6nrQByC7BWDMOQrJb3ShQQxD4rTaypyJlkAJeTFFJwoTlepq4AcJtaZgBabPORrqRAIFdM9y"
