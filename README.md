@@ -1,3 +1,9 @@
+## System Design
+![image](https://github.com/xzippyzachx/E-CommerceAuctionSystem/assets/33043402/7975bb18-2e2c-438a-8fcb-4d438d1d49d3)
+
+## Database Design
+![image](https://github.com/xzippyzachx/E-CommerceAuctionSystem/assets/33043402/b0c31dcd-ac7d-41d3-8752-2b4a81b3c8b0)
+
 ## Follow these instructions to setup and run the E-Commerce Auction System
 
 ### Using Docker Compose
