@@ -1,8 +1,8 @@
 ## System Design
-![image](https://github.com/xzippyzachx/E-CommerceAuctionSystem/assets/33043402/7975bb18-2e2c-438a-8fcb-4d438d1d49d3)
+![image](https://github.com/xzippyzachx/E-CommerceAuctionSystem/assets/33043402/780a36dd-845f-4aa4-8bd6-0063f6c784d8)
 
 ## Database Design
-![image](https://github.com/xzippyzachx/E-CommerceAuctionSystem/assets/33043402/b0c31dcd-ac7d-41d3-8752-2b4a81b3c8b0)
+![image](https://github.com/xzippyzachx/E-CommerceAuctionSystem/assets/33043402/1b2df9aa-4f2e-4af3-afa6-2f4c100fbf1f)
 
 ## Follow these instructions to setup and run the E-Commerce Auction System
 
